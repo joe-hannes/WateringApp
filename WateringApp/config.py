@@ -1,0 +1,8 @@
+
+SECRET_KEY = 'thisisasecret'
+SQLALCHEMY_DATABASE_URI = 'sqlite:///sqlite3.db'
+CSRF_ENABLED = True
+USER_ENABLE_EMAIL = False
+USER_ENABLE_REGISTER = False
+USER_APP_NAME = "Watering App"
+SQLALCHEMY_TRACK_MODIFICATIONS = False

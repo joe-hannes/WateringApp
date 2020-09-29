@@ -1,0 +1,72 @@
+body
+{
+  margin: 0px;
+  background-color: #191717;
+  text-align: center;
+}
+
+
+
+#play-btn
+{
+  visibility: hidden;
+}
+
+#pause-text
+{
+  visibility: visible;
+}
+
+#status-area
+
+{
+  stroke: #79ab64;
+  fill: #79ab64;
+  /* visibility: hidden; */
+}
+
+#active-text
+{
+  visibility: hidden;
+}
+
+#error-text
+{
+  visibility: hidden;
+}
+
+
+
+#active-icon
+{
+  visibility: visible;
+}
+
+#error-icon
+{
+  visibility: hidden;
+}
+
+#value-text
+{
+  color: #3c8dff;
+  position: absolute;
+  top: 80%;
+  left: 55%;
+}
+
+
+#progress-bar {
+  fill: none;
+  stroke-miterlimit: round;
+  will-change: auto;
+  stroke-width: 25px;
+  transition: stroke-dashoffset 850ms ease-in-out;
+}
+
+.svg-container
+{
+
+  height: 90vh;
+  min-height: 540px;
+}

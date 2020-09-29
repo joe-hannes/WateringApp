@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<style>
+  body {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  svg path {
+    fill: none;
+    stroke-width: 20px;
+    stroke-miterlimit: round;
+    transition: stroke-dashoffset 850ms ease-in-out;
+  }
+</style>
+</head>
+<body>
+
+  <svg width="200" height="20" data-value="40">
+    <path class="bg" stroke="#ccc" d="M0 10, 200 10"></path>
+    <path class="meter" stroke="#09c" d="M793.707,1349.27C800.194,1511.44 934.218,1603.83 1058.65,1603.83C1187.63,1603.83 1319.35,1502.94 1321.93,1349.18C1321.96,1347.24 1320.41,1345.64 1318.47,1345.61C1316.53,1345.57 1314.92,1347.12 1314.89,1349.07C1312.38,1498.68 1184.16,1596.8 1058.65,1596.8C937.52,1596.8 807.054,1506.86 800.738,1348.98C800.661,1347.04 799.022,1345.53 797.082,1345.61C795.142,1345.69 793.629,1347.33 793.707,1349.27Z" style="stroke-dasharray: 1624.8692626953125; stroke-dashoffset: 1624.8692626953125;"></path>
+  </svg>
+  <script type=text/javascript src="{{
+  url_for('static', filename='myscript.js') }}"></script>
+</body>
+</html>

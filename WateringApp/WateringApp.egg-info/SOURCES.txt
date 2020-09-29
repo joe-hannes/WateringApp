@@ -1,0 +1,15 @@
+setup.py
+WateringApp/ADS1x15.py
+WateringApp/Config.py
+WateringApp/Humidity.py
+WateringApp/Motor.py
+WateringApp/SoilSensor.py
+WateringApp/User.py
+WateringApp/WateringSystem.py
+WateringApp/__init__.py
+WateringApp/views.py
+WateringApp.egg-info/PKG-INFO
+WateringApp.egg-info/SOURCES.txt
+WateringApp.egg-info/dependency_links.txt
+WateringApp.egg-info/requires.txt
+WateringApp.egg-info/top_level.txt
