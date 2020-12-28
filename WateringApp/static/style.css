@@ -3,52 +3,55 @@ body
   margin: 0px;
   /* background-color: #191717; */
   background-color: red;
-  text-align: center;
+  /* text-align: center; */
 }
 
 .ocean
 {
-  height: 0px;
+  height: 33vh;
   width:100%;
   position:absolute;
-  bottom:10;
+  bottom:3px;
   left:0;
   background: #2a6d87;
 }
 
 .wave
 {
-background: url(wave.svg) repeat-x;
-position: absolute;
-top: -50px;
-width: 6400px;
-height: 50px;
-margin: 0px;
-padding: 0px;
-border: solid red 1px;
+  background: url(wave.svg) repeat-x;
+  position: absolute;
+  top: -50px;
+  padding-bottom: 1px;
+  width: 6400px;
+  height: 50px;
+  /* margin: 0px;
+  padding: 0px; */
+  /* border: solid red 1px; */
 
 
-animation: wave 7s cubic-bezier( 0.36, 0.45, 0.63, 0.53) infinite;
-transform: translate3d(0, 0, 0);
+  animation: wave 7s cubic-bezier( 0.36, 0.45, 0.63, 0.53) infinite;
+  transform: translate3d(0, 0, 0);
 }
 
 #ocean-container
 {
-position: absolute;
-text-align: center;
-width: 100%;
-min-width: 540px;
-height: 100%;
-bottom: 0px;
-overflow:hidden;
+  position: absolute;
+  text-align: center;
+  width: 100%;
+  min-width: 540px;
+  height: 80vh ;
+  /* border: red solid 2px; */
+  /* top: 0px; */
+  top: 10vh;
+  overflow:hidden;
 
-z-index: -1;
+  z-index: -1;
 }
 
 #svg
 {
 
-border: solid 1px red;
+/* border: solid 1px red; */
 
 }
 
@@ -128,8 +131,13 @@ border: solid 1px red;
   transition: stroke-dashoffset 850ms ease-in-out;
 }
 
-.svg-container
+.anim-container
 {
-  height: 90vh;
-  min-height: 540px;
+  padding-top: 10vh;
+  /* padding-bottom: 10vh; */
+  height: 80vh;
+  /* border: solid green 3px; */
+
+  /* min-height: 540px; */
+  /* min-width: 90vh; */
 }
