@@ -3,11 +3,11 @@ from flask import Flask, Blueprint
 from flask_user import UserManager
 from flask_sqlalchemy import SQLAlchemy
 
-from .extensions import db
+from extensions import db
 
-from .views import main, json
+from views import main, json
 
-from .User import User
+from User import User
 
 
 
@@ -23,11 +23,11 @@ def createApp(config_file= 'config.py'):
 
     db.init_app(app)
 
-
+    # app.run(threaded=True, host="0.0.0.0", port="8080")
 
     return app
 
-    # app.run(threaded=True, host="0.0.0.0", port="8080")
+
 
 
 if __name__ == "__main__":

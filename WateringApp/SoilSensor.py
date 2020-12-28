@@ -1,4 +1,4 @@
-from WateringApp.Humidity import Humidity
+from WateringApp.Fachwerte.Humidity import Humidity
 # Import the ADS1x15 module.
 from WateringApp.ADS1x15 import ADS1015
 

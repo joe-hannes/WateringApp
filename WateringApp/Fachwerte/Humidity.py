@@ -6,32 +6,44 @@
 class Humidity():
 
 
+
+
     def __init__(self, value):
+
+        self.__minValue = 692
+        self.__maxValue = 1397
+
+        assert self.istGueltig(value), 'Vorbedingung verletzt: Feuchtigkeit muss zwischen 692 und 1397 liegen. Ist aber: ' + str(value)
 
         self.__value = value
 
-        self.__minValue = 692
-
-        self.__maxValue = 1397
-
         self.__valueInPercent = 0
 
-        assert(value < self.__minValue, 'Vorbedingung verletzt: Feuchtigkeit darf nicht kleiner als 692 sein.')
-        assert(value > self.__maxValue, 'Vorbedingung verletzt: Feuchtigkeit darf nicht kleiner als 1397 sein.')
 
 
+    def istGueltig(self, humidity):
+        return humidity >= self.__minValue and humidity <= self.__maxValue
 
-    def intToHumidity(self, value):
+    @staticmethod
+    def intToHumidity(value):
 
         '''Converts an Integer to a Humidity Unit
 
         @param value: the value to Converts
         @return the Humidity Unit
-        
+
         '''
         return Humidity(value)
 
 
+    def __eq__(self, other):
+        if not isinstance(other, Humidity):
+            return False
+
+        return self.__value == other.__value
+
+    def __hash__(self):
+        return hash(self.__value)
 
 
     def getValue(self):
@@ -57,8 +69,8 @@ class Humidity():
 
         range = self.__maxValue - self.__minValue
         value = self.__value - self.__minValue
-        percent = float(100)/float(range)
-        return 100 - round(percent*value)
+        percent = float(100) / float(range)
+        return round(100 - (percent*value))
 
 
 

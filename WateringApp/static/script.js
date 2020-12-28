@@ -21,6 +21,15 @@ function ajaxRequest()
 }});
 }
 
+
+function activatePump()
+{
+  $.ajax({url:'/json', success: (result) =>
+{
+  console.log("Successfully activated pump");
+}});
+}
+
 // code to make the progress bar have a fill effect
 function animateProgressBar(data)
 {
@@ -35,7 +44,7 @@ function animateProgressBar(data)
   console.log(value);
   // Calculate the percentage of the total length
   // let to = length * ((100 - value) / 100);
-  let to = length * ((100 - parseInt(data)) / 100);
+  let to = (length/100) *  (100 - data)
 
 
   // Trigger Layout in Safari hack https://jakearchibald.com/2013/animated-line-drawing-svg/
@@ -71,6 +80,30 @@ $('#pause-btn').on('click', () =>
   $('#pause-text').css('visibility', 'visible');
   $('#status-area').css('fill', '#d35f60');
   $('#status').css('stroke', '#d35f60');
+});
+
+$('#pause-circle').on('click', () =>
+{
+  $('#play-btn').css('visibility', 'visible');
+  $('#pause-btn').css('visibility', 'hidden');
+  $('#active-icon').css('visibility', 'hidden');
+  $('#error-icon').css('visibility', 'visible');
+  $('#active-text').css('visibility', 'hidden');
+  $('#pause-text').css('visibility', 'visible');
+  $('#status-area').css('fill', '#d35f60');
+  $('#status').css('stroke', '#d35f60');
+});
+
+$('#play-circle').on('click', () =>
+{
+  $('#play-btn').css('visibility', 'hidden');
+  $('#pause-btn').css('visibility', 'visible');
+  $('#active-text').css('visibility', 'visible');
+  $('#pause-text').css('visibility', 'hidden');
+  $('#active-icon').css('visibility', 'visible');
+  $('#error-icon').css('visibility', 'hidden');
+  $('#status-area').css('fill', '#79ab64');
+  $('#status-area').css('stroke', '#79ab64');
 });
 
 });
