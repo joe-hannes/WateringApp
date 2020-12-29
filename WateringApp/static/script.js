@@ -24,7 +24,7 @@ function ajaxRequest()
 
 function activatePump()
 {
-  $.ajax({url:'/json', success: (result) =>
+  $.ajax({url:'/activatePump', success: (result) =>
 {
   console.log("Successfully activated pump");
 }});
@@ -55,6 +55,15 @@ function animateProgressBar(data)
 
 // onClick Event Handlers
 // handle button clicks pause-button
+
+
+
+
+$('#drop-circle').on('click', () =>
+{
+  activatePump();
+  $( "div.success" ).fadeIn( 300 ).delay( 1500 ).fadeOut( 400 );
+});
 
 $('#play-btn').on('click', () =>
 {

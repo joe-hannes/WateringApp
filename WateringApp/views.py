@@ -2,7 +2,8 @@
 from flask_user import login_required
 from flask import Flask, render_template, Blueprint
 
-from SoilSensor import SoilSensor
+from .SoilSensor import SoilSensor
+from .Motor import Motor
 
 
 main = Blueprint('main', __name__)
@@ -23,3 +24,10 @@ def serveJSON():
     values = SoilSensor().getHumidity(1)
     values = values.toJSONString()
     return values
+
+@json.route("/activatePump")
+@login_required
+def activatePump():
+    motor = Motor()
+    motor.continuous("right")
+    return "Successfully started Motor"

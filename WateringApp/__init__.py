@@ -3,11 +3,11 @@ from flask import Flask, Blueprint
 from flask_user import UserManager
 from flask_sqlalchemy import SQLAlchemy
 
-from extensions import db
+from .extensions import db
 
-from views import main, json
+from .views import main, json
 
-from User import User
+from .User import User
 
 
 
