@@ -13,9 +13,13 @@ class Humidity():
         self.__minValue = 692
         self.__maxValue = 1397
 
-        assert self.istGueltig(value), 'Vorbedingung verletzt: Feuchtigkeit muss zwischen 692 und 1397 liegen. Ist aber: ' + str(value)
 
         self.__value = value
+
+        try:
+            assert self.istGueltig(value), 'Vorbedingung verletzt: Feuchtigkeit muss zwischen 692 und 1397 liegen. Ist aber: ' + str(value)
+        except AssertionError:
+            self.__value = 0
 
         self.__valueInPercent = 0
 

@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 from .extensions import db
 
-from .views import main, json
+from .views import main, json, pump, test
 
 from .User import User
 
@@ -20,6 +20,8 @@ def createApp(config_file= 'config.py'):
 
     app.register_blueprint(main)
     app.register_blueprint(json)
+    app.register_blueprint(pump)
+    app.register_blueprint(test)
 
     db.init_app(app)
 

@@ -16,6 +16,7 @@ function ajaxRequest()
 {
   console.log('result: ' + result);
   var obj = JSON.parse(result);
+  console.log(obj);
   $('#value-text').html(obj.percentString)
   animateProgressBar(obj.percent)
 }});
