@@ -1,5 +1,5 @@
 import unittest
-from Humidity import Humidity
+from .Humidity import Humidity
 
 class TestHumidity(unittest.TestCase):
 
@@ -27,6 +27,7 @@ class TestHumidity(unittest.TestCase):
 
         humidity = Humidity(692).inPercent()
         humidity50 = Humidity((1397+692)/2).inPercent()
+        print(humidity)
         print(humidity50)
         self.assertTrue((humidity == round(float(0))))
         self.assertTrue((humidity50 == round(float(50))))
@@ -51,14 +52,15 @@ class TestHumidity(unittest.TestCase):
 
     def testToJSONString(self):
 
+        testDict = {
+            "value": "692",
+            "percentString": "0%",
+            "percent": 0
+        }
+
         humidity = Humidity(692)
 
-        self.assertTrue((
-            '{\"value\":\"' + humidity.getStringValue()  + '\",'+
-            '\"percentString\":\"' + humidity.inPercentString() + '\",' +
-            '\"percent\":\"' + str(humidity.inPercent()) + '\"}' ==
-            '{\"value\":\"692\",\"percentString\":\"0%\",\"percent\":\"0\"}'))
-
+        self.assertTrue(humidity.toJSONString() == testDict)
 
 
     if __name__ == '__main__':

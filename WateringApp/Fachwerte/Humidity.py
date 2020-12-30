@@ -71,10 +71,13 @@ class Humidity():
 
         '''
 
+        if self.__value == 0:
+            return 0
+
         range = self.__maxValue - self.__minValue
         value = self.__value - self.__minValue
         percent = float(100) / float(range)
-        return round(100 - (percent*value))
+        return round(percent*value)
 
 
 
@@ -112,7 +115,14 @@ class Humidity():
 
         '''
 
+        humidityDict = {
+            "value": self.getStringValue(),
+            "percentString": self.inPercentString(),
+            "percent": self.inPercent()
+        }
 
-        return ('{\"value\":\"' + self.getStringValue() + '\",' +
-        '\"percentString\":\"' + self.inPercentString() + '\",' +
-        '\"percent\":\"' + str(self.inPercent()) + '\"}')
+
+        return humidityDict
+        # return ('\"{\"value\":\"' + self.getStringValue() + '\", ' +
+        # '\"percentString\":\"' + self.inPercentString() + '\", ' +
+        # '\"percent\":\"' + str(self.inPercent()) + '\"}\"')

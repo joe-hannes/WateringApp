@@ -28,12 +28,14 @@ def index():
 def serveJSON():
     valArray = []
 
-    # for i in range(3):
-    values = SoilSensor().getHumidity(1)
-    values = values.toJSONString()
-    valArray.append(values)
-    # return json2.dumps(valArray)
-    return values
+    for i in range(3):
+        # i=1
+        values = SoilSensor().getHumidity(i)
+        values = values.toJSONString()
+        valArray.append(values)
+    # print(listString)
+    return json2.dumps(valArray)
+        # return values
 
 @pump.route("/activatePump")
 @login_required
@@ -45,5 +47,4 @@ def activatePump():
 @test.route('/test')
 @login_required
 def testSite():
-
     return render_template("test.html")

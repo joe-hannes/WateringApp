@@ -17,8 +17,8 @@ function ajaxRequest()
   console.log('result: ' + result);
   var obj = JSON.parse(result);
   console.log(obj);
-  $('#value-text').html(obj.percentString)
-  animateProgressBar(obj.percent)
+  $('#value-text').html(obj[1].percentString)
+  animateProgressBar(obj[1].percent)
 }});
 }
 
@@ -45,7 +45,7 @@ function animateProgressBar(data)
   console.log(value);
   // Calculate the percentage of the total length
   // let to = length * ((100 - value) / 100);
-  let to = (length/100) *  (100 - data)
+  let to = (length/100) *  (data)
 
 
   // Trigger Layout in Safari hack https://jakearchibald.com/2013/animated-line-drawing-svg/
