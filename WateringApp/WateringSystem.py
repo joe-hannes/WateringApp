@@ -13,11 +13,10 @@ from WateringApp.Fachwerte.Humidity import Humidity
 from WateringApp.SoilSensor import SoilSensor
 
 
-# STOP = False
+STOP = False
 
 class WateringSystem(object):
 
-    STOP = False
 
     def __init__(self):
 
@@ -56,13 +55,15 @@ class WateringSystem(object):
     def start(self):
         self.__motor.stop()
         start = time.time()
+        global STOP
         counter = 0
         channels = 4
         time.sleep(3);
+        daemon = threading.currentThread()
         while True:
             humidity = self.__sensor.getHumidity(1)
             print("humidity: " + str(humidity.getValue()))
-            print("STOP: " + str(self.STOP))
+            print("STOP: " + str(STOP))
             if humidity.getValue() > 900 :
                 startTime = time.time()
                 currentTime = startTime
@@ -92,7 +93,14 @@ class WateringSystem(object):
                 self.__motor.stop()
                 break
 
-            if self.STOP :
+            if STOP :
+                print(self.__errorMsg)
+                self.__ws_status = -1
+                self.decodeStatus()
+                self.__motor.stop()
+                break
+
+            if getattr(daemon,"stop", True) :
                 print(self.__errorMsg)
                 self.__ws_status = -1
                 self.decodeStatus()

@@ -4,7 +4,7 @@ from flask import Flask, render_template, Blueprint, g
 
 import threading
 
-from .WateringSystem import WateringSystem
+from .WateringSystem import WateringSystem, STOP
 
 from .extensions import db
 
@@ -130,7 +130,8 @@ def toggleAutoMode():
 
         Widget.query.first().widget_state = False
         db.session.commit()
-        wsys.STOP = True
+        STOP = True
+        daemon.stop = False
 
     else:
 
