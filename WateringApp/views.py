@@ -2,6 +2,10 @@
 from flask_user import login_required
 from flask import Flask, render_template, Blueprint, g
 
+import threading
+
+from .WateringSystem import WateringSystem
+
 from .extensions import db
 
 from .Models import Widget
@@ -32,6 +36,11 @@ widgetState = Blueprint('widgetState', __name__)
 
 createTables = Blueprint('createTables', __name__)
 
+
+def startSystem(wsys):
+    # do everything else
+    wsys.start()
+
 @main.route("/")
 @login_required
 def index():
@@ -54,15 +63,15 @@ def serveJSON():
 
     time.sleep(0.1)
 
-    value = SoilSensor().getHumidity(2)
-    value = value.toJSONString()
-    valArray.append(value)
-
-    time.sleep(0.5)
-
-    value = SoilSensor().getHumidity(3)
-    value = value.toJSONString()
-    valArray.append(value)
+    # value = SoilSensor().getHumidity(2)
+    # value = value.toJSONString()
+    # valArray.append(value)
+    #
+    # time.sleep(0.5)
+    #
+    # value = SoilSensor().getHumidity(3)
+    # value = value.toJSONString()
+    # valArray.append(value)
     # print(listString)
     return json2.dumps(valArray)
         # return values
@@ -95,6 +104,8 @@ def getWidgetState():
     return str(db_entry)
 
 
+
+
 @autoMode.route("/toggleAutoMode")
 @login_required
 def toggleAutoMode():
@@ -108,10 +119,25 @@ def toggleAutoMode():
     #
     # for row in rows:
     #     print(row)
+
+    wsys = WateringSystem()
+    daemon = threading.Thread(name='startSystem',
+                              target=startSystem, args=(wsys,))
+
+
     if Widget.query.first().widget_state == True:
+
+
         Widget.query.first().widget_state = False
         db.session.commit()
+        wsys.STOP = True
+
     else:
+
+
+        # Set as a daemon so it will be killed once the main thread is dead.
+        daemon.setDaemon(True)
+        daemon.start()
         Widget.query.first().widget_state = True
         db.session.commit()
 

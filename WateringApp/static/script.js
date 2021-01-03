@@ -17,8 +17,8 @@ function ajaxRequest()
   console.log('result: ' + result);
   var obj = JSON.parse(result);
   console.log(obj);
-  $('#value-text').html(obj[1].percentString)
-  animateProgressBar(obj[1].percent)
+  $('#value-text').html(obj[0].percentString)
+  animateProgressBar(obj[0].percent)
 }});
 }
 

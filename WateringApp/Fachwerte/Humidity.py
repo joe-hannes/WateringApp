@@ -58,7 +58,7 @@ class Humidity():
 
         '''
 
-        return self.__value
+        return  self.__value 
 
 
 
@@ -77,7 +77,7 @@ class Humidity():
         range = self.__maxValue - self.__minValue
         value = self.__value - self.__minValue
         percent = float(100) / float(range)
-        return round(percent*value)
+        return round(100 - percent*value)
 
 
 

@@ -6,16 +6,18 @@ import time
 from WateringApp.Motor import Motor
 
 # Import the ADS1x15 module.
-from ADS1x15 import ADS1015
+from .ADS1x15 import ADS1015
 import threading
 
-from WateringApp.Humidity import Humidity
+from WateringApp.Fachwerte.Humidity import Humidity
 from WateringApp.SoilSensor import SoilSensor
 
 
-
+# STOP = False
 
 class WateringSystem(object):
+
+    STOP = False
 
     def __init__(self):
 
@@ -58,19 +60,21 @@ class WateringSystem(object):
         channels = 4
         time.sleep(3);
         while True:
-            humidity = self.__sensor.getHumidity(3)
-            if humidity.getValue() > 900 and counter < 5:
+            humidity = self.__sensor.getHumidity(1)
+            print("humidity: " + str(humidity.getValue()))
+            print("STOP: " + str(self.STOP))
+            if humidity.getValue() > 900 :
                 startTime = time.time()
                 currentTime = startTime
-                while startTime - currentTime < 30:
-                    currentTime = time.time()
-                    counter+=1
-                    print("Counter: " + str(counter))
-                    print('Channel 3: {0}'.format(self.__sensor.getHumidity(3).getValue()))
-                    print("Low humidity Level. Starting pump.")
-                    self.__ws_status = 1
-                    self.decodeStatus()
-                    self.__motor.continuous()
+
+                currentTime = time.time()
+                counter+=1
+                print("Counter: " + str(counter))
+                print('Channel 1: {0}'.format(self.__sensor.getHumidity(1).getValue()))
+                print("Low humidity Level. Starting pump.")
+                self.__ws_status = 1
+                self.decodeStatus()
+                self.__motor.continuous("right")
 
 
             else:
@@ -82,6 +86,13 @@ class WateringSystem(object):
                 time.sleep(30)
 
             if counter == 5:
+                print(self.__errorMsg)
+                self.__ws_status = -1
+                self.decodeStatus()
+                self.__motor.stop()
+                break
+
+            if self.STOP :
                 print(self.__errorMsg)
                 self.__ws_status = -1
                 self.decodeStatus()
