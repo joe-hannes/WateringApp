@@ -11,5 +11,5 @@ class SoilSensor:
 
     def getHumidity(self, channel):
         humidity = self.__humidity.intToHumidity(self.__adc.read_adc(channel, gain=self.__GAIN))
-        self.__adc.stop_adc();
+        # self.__adc.stop_adc();
         return humidity

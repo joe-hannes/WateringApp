@@ -59,8 +59,7 @@ body
                             <path d="M1151.06,1563.2c0,303.923 -231.625,550.67 -516.923,550.67c-285.297,0 -516.922,-246.747 -516.922,-550.67" style="fill:#353638;stroke:#808080;stroke-width:52.08px;"/>
                             <path d="M634.342,1650.36l-0.209,200.34" style="fill:none;stroke:#808080;stroke-width:12.25px;"/>
                             <path id="progress-bar" fill="none" stroke-dasharray="1677" stroke-dashoffset="1677" stroke="#09c" d="M117.043,1563.2c0,303.923 231.663,550.67 517.007,550.67c285.343,0 517.006,-246.747 517.006,-550.67" style="fill:none;stroke:#09c;stroke-width:52.08px;"/>
-                            <path id="status-area" d="M91.793,1567.36c0,-299.326 243.015,-542.34 542.34,-542.34c299.326,-0 542.341,243.014 542.341,542.34l-1084.68,-0Z" style="fill:#79ab64; stroke:#79ab64;"/>
-                            <!-- d= "M1151.06,1563.2c0,303.923 -231.663,550.67 -517.006,550.67c-285.344,0 -517.007,-246.747 -517.007,-550.67" -->
+                            <path id="status-area" d="M91.793,1567.36c0,-299.326 243.015,-542.34 542.34,-542.34c299.326,-0 542.341,243.014 542.341,542.34l-1084.68,-0Z"/>
                             <!-- <path id="status-area-stroke" d="M91.793,1567.36c0,-299.326 243.015,-542.34 542.34,-542.34c299.326,-0 542.341,243.014 542.341,542.34l-1084.68,-0Zm1029.85,-52.084c-26.025,-246.126 -234.516,-438.173 -487.509,-438.173c-252.992,-0 -461.484,192.047 -487.509,438.173l975.018,0Z" style="fill:#79ab64;"/> -->
                             <text id="value-text" x="575.219px" y="2050.2px" style="font-family:'ArialMT', 'Arial', sans-serif;font-size:100px;fill:#09c;stroke:#09c;stroke-width:2.08px;stroke-miterlimit:2;">{{data}} %</text>
 
@@ -143,7 +142,7 @@ body
                       <circle id = "drop-circle"  cx="840" cy="1860" r="90" fill-opacity="0">
                         </circle>
 
-                        <g transform="matrix(1.5, 0, 0, 1.5, -600, 1250)">
+                        <g id="playtopause" transform="matrix(1.5, 0, 0, 1.5, -600, 1250)">
                         <!-- part 1 -->
                         <!-- vertical line -->
                         <path d='M662.843,447.984
@@ -332,6 +331,203 @@ body
                         </circle>
 
                       </g>
+                      <g id="pausetoplay" transform="matrix(1.5, 0, 0, 1.5, -600, 1250)">
+                      <!-- part 1 -->
+                      <!-- vertical line -->
+                      <path d='M660.164,447.984
+                              L676.594,447.984
+                              L676.594,363.808
+                              L660.164,363.808
+                              L660.164,447.984'
+                                    stroke='#d35f60'
+                                    stroke-width='10px'
+                                    fill='#d35f60'
+                                    stroke-linecap="round" >
+                          <animate
+                              dur="0.3s"
+
+                                     begin="startAnimation2.begin"
+                                     attributeName="d"
+                                     values=   '
+                                                 M660.164,447.984
+                                                 L676.594,447.984
+                                                 L676.594,363.808
+                                                 L660.164,363.808
+                                                 L660.164,447.984
+
+                                                ;
+                                                M662.843,447.984
+                                                L696.434,429.931
+                                                L696.434,381.861
+                                                L662.843,363.808
+                                                L662.843,447.984
+
+                                              '
+                                     fill="freeze"   />
+                          <animate
+                              dur="0.3s"
+                                     begin="reverseAnimation2.begin"
+                                     attributeName="d"
+                                     values=   ' M662.843,447.984
+                                                 L696.434,429.931
+                                                 L696.434,381.861
+                                                 L662.843,363.808
+                                                 L662.843,447.984;
+                                                 M660.164,447.984
+                                                 676.594,447.984
+                                                 676.594,363.808
+                                                 660.164,363.808
+                                                 660.164,447.984
+
+                                                   '
+                                     fill="freeze" />
+
+                                     <animate
+                                         dur="0.3s"
+                                                  begin="startAnimation2.begin"
+                                                  attributeName="fill"
+                                                  values='#79ab64'
+                                                  fill="freeze" />
+
+                                    <animate
+                                        dur="0.3s"
+                                                 begin="startAnimation2.begin"
+                                                 attributeName="stroke"
+                                                 values='#79ab64'
+                                                 fill="freeze" />
+
+                                    <animate
+                                        dur="0.3s"
+                                                 begin="reverseAnimation2.begin"
+                                                 attributeName="stroke"
+                                                 values='#d35f60'
+                                                 fill="freeze" />
+
+
+
+                                   <animate
+                                       dur="0.3s"
+                                                begin="reverseAnimation2.begin"
+                                                attributeName="fill"
+                                                values='#d35f60'
+                                                fill="freeze" />
+
+                      </path>
+
+
+
+                      <!-- part 2 -->
+                      <!-- horizontal line -->
+                      <path d="M716.878,447.984
+                               L716.878,363.808
+                               L733.308,363.808
+                               L733.308,447.984
+                               L716.878,447.984"
+                                   stroke="#d35f60"
+                                   fill='#d35f60'
+                                   stroke-width='10px'
+                                  stroke-linecap="round">
+                          <animate
+                              dur="0.3s"
+                                     begin="startAnimation2.begin"
+                                     attributeName="d"
+                                     values='
+                                     M716.878,447.984
+                                      L716.878,363.808
+                                      L733.308,363.808
+                                      L733.308,447.984
+                                      L716.878,447.984;
+
+                                      M696.434,429.931
+                                     L696.434,381.861
+                                     L718.794,393.879
+                                     L741.155,405.896
+                                     L696.434,429.931
+
+                                   '
+                                     fill="freeze" />
+                          <animate
+                              dur="0.3s"
+                                       begin="reverseAnimation2.begin"
+                                       attributeName="d"
+                                       values='
+                                                 M696.434,429.931
+                                                 L696.434,381.861
+                                                 L718.794,393.879
+                                                 L741.155,405.896
+                                                 L696.434,429.931
+                                                 ;
+                                                 M716.878,447.984
+                                                  L716.878,363.808
+                                                  L733.308,363.808
+                                                  L733.308,447.984
+                                                  L716.878,447.984
+
+                                                  '
+                                       fill="freeze" />
+                           <animate
+                               dur="0.3s"
+                                        begin="startAnimation2.begin"
+                                        attributeName="fill"
+                                        values='#79ab64'
+                                        fill="freeze" />
+
+                          <animate
+                              dur="0.3s"
+                                         begin="startAnimation2.begin"
+                                         attributeName="stroke"
+                                         values='#79ab64'
+                                         fill="freeze" />
+                          <animate
+                              dur="0.3s"
+                                       begin="reverseAnimation2.begin"
+                                       attributeName="stroke"
+                                       values='#d35f60'
+                                       fill="freeze" />
+
+                         <animate
+                             dur="0.3s"
+                                      begin="reverseAnimation2.begin"
+                                      attributeName="fill"
+                                      values='#d35f60'
+                                      fill="freeze" />
+
+                      </path>
+                      <!--  controls -->
+                      <!-- these are on top of the visible circle.  Their radius changes depending on which is active
+                          Opacity is set to 0 so you can't see them-->
+                      <circle id="pause-circle2" cx="697" cy="405" r="60"   stroke-width='2px' fill-opacity="0">
+                          <animate
+                                     dur="0.01s"
+                                     id="startAnimation2"
+                                     attributeName="r"
+                                     values="60; 0"
+                                     fill="freeze"
+                                     begin="click" />
+                          <animate
+                                     dur="0.01s"
+                                     attributeName="r"
+                                     values="0; 60"
+                                     fill="freeze"
+                                     begin="reverseAnimation2.end" />
+                      </circle>
+                      <circle id="play-circle2" cx="697" cy="405" r="0"   stroke-width='2px' fill-opacity="0">
+                          <animate
+                                     dur="0.001s"
+                                     id="reverseAnimation2"
+                                     attributeName="r"
+                                     values="60; 0"
+                                     fill="freeze"
+                                     begin="click" />
+                          <animate
+                                     dur="0.001s"
+                                     attributeName="r"
+                                     values="0; 60"
+                                     begin="startAnimation2.end"
+                                     fill="freeze"  />
+                      </circle>
+
+                    </g>
 
 
                 </div>

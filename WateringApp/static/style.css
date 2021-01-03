@@ -92,7 +92,7 @@ body
 }
 }
 
-#play-btn
+/* #play-btn
 {
   visibility: hidden;
 }
@@ -138,7 +138,7 @@ body
   position: absolute;
   top: 80%;
   left: 55%;
-}
+} */
 
 
 #progress-bar {
