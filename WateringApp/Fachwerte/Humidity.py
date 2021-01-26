@@ -7,19 +7,20 @@ class Humidity():
 
 
 
-
     def __init__(self, value):
 
-        self.__minValue = 692
-        self.__maxValue = 1397
+        self.__minValue = 10100
+        self.__maxValue = 22300
 
 
         self.__value = value
 
-        try:
-            assert self.istGueltig(value), 'Vorbedingung verletzt: Feuchtigkeit muss zwischen 692 und 1397 liegen. Ist aber: ' + str(value)
-        except AssertionError:
-            self.__value = 0
+        # try:
+        #     assert self.istGueltig(value), 'Vorbedingung verletzt: Feuchtigkeit muss zwischen 10100 und 22300 liegen. Ist aber: ' + str(value)
+        # except AssertionError:
+        #     self.__value = -1
+
+
 
         self.__valueInPercent = 0
 
@@ -58,7 +59,7 @@ class Humidity():
 
         '''
 
-        return  self.__value 
+        return  self.__value
 
 
 
@@ -120,9 +121,47 @@ class Humidity():
             "percentString": self.inPercentString(),
             "percent": self.inPercent()
         }
-
-
         return humidityDict
         # return ('\"{\"value\":\"' + self.getStringValue() + '\", ' +
         # '\"percentString\":\"' + self.inPercentString() + '\", ' +
         # '\"percent\":\"' + str(self.inPercent()) + '\"}\"')
+
+
+    def getMinValue(self):
+
+        ''' Returns Humidity min value
+
+        @return the humidity value as Str
+
+        '''
+
+        return self.__minValue
+
+
+
+    def setMinValue(self, value):
+
+        ''' Sets Humidity minimum value
+
+        '''
+        self.__minValue = value
+
+
+    def getMaxValue(self):
+
+        ''' Returns maximum Humidity value
+
+        @return the humidity min value
+
+        '''
+
+        return self.__maxValue
+
+
+    def setMaxValue(self, value):
+
+        ''' Sets maximum Humidity value
+
+        '''
+
+        self.__maxValue = value

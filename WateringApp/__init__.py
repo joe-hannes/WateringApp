@@ -5,9 +5,11 @@ from flask_sqlalchemy import SQLAlchemy
 
 from .extensions import db
 
-from .views import main, json, pump, test, autoMode, createTables, widgetState
+from .views import main, json, pump, test, autoMode, createTables, widgetState, start_runner, initialCode, badReq, assertionError
 
 from .Models import User, Widget
+
+# import requests
 
 
 
@@ -25,8 +27,13 @@ def createApp(config_file= 'config.py'):
     app.register_blueprint(autoMode)
     app.register_blueprint(createTables)
     app.register_blueprint(widgetState)
+    app.register_blueprint(initialCode)
+    app.register_blueprint(badReq)
+    # app.register_blueprint(assertionError)
 
     db.init_app(app)
+
+    start_runner()
 
 
     # app.run(threaded=True, host="0.0.0.0", port="8080")

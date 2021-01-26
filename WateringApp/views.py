@@ -19,6 +19,10 @@ import json as json2
 
 import time
 
+import requests
+
+import werkzeug
+
 DATABASE = 'sqlite3.db'
 
 
@@ -36,16 +40,70 @@ widgetState = Blueprint('widgetState', __name__)
 
 createTables = Blueprint('createTables', __name__)
 
+initialCode = Blueprint('initialCode', __name__)
+
+badReq = Blueprint('badReq', __name__)
+
+assertionError = Blueprint('assertionError', __name__)
+
 
 def startSystem(wsys):
     # do everything else
     wsys.start()
 
+def start_runner():
+    def start_loop():
+        not_started = True
+        while not_started:
+            print('In start loop')
+            try:
+                r = requests.get('http://127.0.0.1:5000/')
+                print(r)
+                if r.status_code == 200:
+                    print('Server started, quiting start_loop')
+                    not_started = False
+                print(r.status_code)
+            except:
+                print('Server not yet started')
+            time.sleep(2)
+
+    print('Started runner')
+    thread = threading.Thread(target=start_loop)
+    thread.start()
+
+@initialCode.before_app_first_request
+def activate_job():
+    if Widget.query.first().widget_state:
+        wsys = WateringSystem()
+        daemon = threading.Thread(name='startSystem',
+                                  target=startSystem, args=(wsys,))
+        daemon.start()
+        print("started wsys")
+    # def run_job():
+    #     not_started = True
+    #     while not_started:
+    #         try:
+    #             if g._database.Widget.query.first().widget_state == True:
+    #                 wsys = WateringSystem()
+    #                 wsys.start()
+    #                 print("started wsys")
+    #                 not_started = False
+    #         except:
+    #             print("couldnt query db")
+    #
+    #
+    #
+    #
+    #         time.sleep(3)
+    #
+    # thread = threading.Thread(target=run_job)
+    # thread.start()
+
 @main.route("/")
 @login_required
 def index():
     # values = SoilSensor().getHumidity(0)
-    values = SoilSensor().getHumidity(1)
+    values = SoilSensor(1).getHumidity()
     print("values:" + str(values.getValue()))
     values = values.inPercent()
     state = Widget.query.first().widget_state
@@ -54,26 +112,36 @@ def index():
 @json.route("/json")
 def serveJSON():
     valArray = []
+    average = 0
+    activeAmount = 0
+    results = {}
+    channel = {}
+    for i in range(SoilSensor.AMOUNT + 1):
+        sensor = SoilSensor(i)
+        humidity = sensor.getHumidity()
+        json = humidity.toJSONString()
+        if humidity.getValue() > 100:
+            average = average + humidity.getValue()
+            activeAmount += 1
+            json["active"] = 1
+        else:
+            json["active"] = 0
+        json["channel"] = i
+        valArray.append(json)
 
-    # for i in range(3):
-        # i=1
-    value = SoilSensor().getHumidity(1)
-    value = value.toJSONString()
-    valArray.append(value)
 
-    time.sleep(0.1)
+    average = round(average / activeAmount)
+    channel["channel"] = valArray
+    results["results"] = channel
+    channel["average"] = average
 
-    # value = SoilSensor().getHumidity(2)
-    # value = value.toJSONString()
-    # valArray.append(value)
-    #
-    # time.sleep(0.5)
-    #
-    # value = SoilSensor().getHumidity(3)
-    # value = value.toJSONString()
-    # valArray.append(value)
-    # print(listString)
-    return json2.dumps(valArray)
+
+    print(results)
+    # valArray.append("\"average\" :" + "\"" + str(average) + "\"")
+
+    # print(valArray)
+
+    return json2.dumps(results)
         # return values
 
 @pump.route("/activatePump")
@@ -81,6 +149,7 @@ def serveJSON():
 def activatePump():
     motor = Motor()
     motor.continuous("right")
+    motor.stop()
     return "Successfully started Motor"
 
 
@@ -103,9 +172,6 @@ def getWidgetState():
 
     return str(db_entry)
 
-
-
-
 @autoMode.route("/toggleAutoMode")
 @login_required
 def toggleAutoMode():
@@ -125,8 +191,7 @@ def toggleAutoMode():
                               target=startSystem, args=(wsys,))
 
 
-    if Widget.query.first().widget_state == True:
-
+    if Widget.query.first().widget_state:
 
         Widget.query.first().widget_state = False
         db.session.commit()
@@ -134,7 +199,6 @@ def toggleAutoMode():
         daemon.stop = False
 
     else:
-
 
         # Set as a daemon so it will be killed once the main thread is dead.
         daemon.setDaemon(True)
@@ -160,3 +224,11 @@ def testSite():
     db.session.add(widget)
     db.session.commit()
     return "created all tables!"
+
+@badReq.errorhandler(werkzeug.exceptions.NotFound)
+def handle_bad_request(e):
+    return 'not found!', 404
+
+@assertionError.errorhandler(werkzeug.exceptions)
+def handle_bad_request(e):
+    return 'Assertion error'
