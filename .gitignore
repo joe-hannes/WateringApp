@@ -1,7 +1,6 @@
-WateringApp/__pychache__
-WateringApp/nohup.out
-WateringApp.egg-info
-WateringApp/WateringApp.egg-info
-WateringApp/template/index2.html
-WateringApp/simple_test.py
-WateringApp/sqlite3.db
+**/__pychache__
+**/nohup.out
+**/WateringApp.egg-info
+**/index2.html
+**/simple_test.py
+**/sqlite3.db
