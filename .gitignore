@@ -1,5 +1,6 @@
-__pychache__
-__init__.pyc
-nohup.out
+WateringApp/__pychache__
+WateringApp/__init__.pyc
+WateringApp/nohup.out
 WateringApp.egg-info
-template/index2.html
+WateringApp/WateringApp.egg-info
+WateringApp/template/index2.html
