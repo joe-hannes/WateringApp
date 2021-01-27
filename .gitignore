@@ -1,6 +1,8 @@
-__pychache__
+WateringApp/__pychache__
 WateringApp/__init__.pyc
 WateringApp/nohup.out
 WateringApp.egg-info
 WateringApp/WateringApp.egg-info
 WateringApp/template/index2.html
+WateringApp/simple_test.py
+WateringApp/sqlite3.db

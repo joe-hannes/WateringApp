@@ -1,4 +1,0 @@
-email_validator
-flask
-flask_sqlalchemy
-flask_user
