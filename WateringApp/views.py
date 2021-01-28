@@ -12,6 +12,8 @@ from .Models import Widget
 
 import sqlite3
 
+from  WateringApp.Fachwerte.Humidity import Humidity
+
 from .SoilSensor import SoilSensor
 from .Motor import Motor
 
@@ -121,26 +123,28 @@ def serveJSON():
         humidity = sensor.getHumidity()
         json = humidity.toJSONString()
         if humidity.getValue() > 100:
-            average = average + humidity.getValue()
+            average += humidity.getValue()
             activeAmount += 1
             json["active"] = 1
         else:
             json["active"] = 0
+            json["value"] = "-"
+            json["percent"] = "-"
+            json["percentString"] = "-"
         json["channel"] = i
         valArray.append(json)
 
-
+    print('activeAmount: ' + str(activeAmount))
     average = round(average / activeAmount)
+    avg_humidity = Humidity.intToHumidity(average)
     channel["channel"] = valArray
     results["results"] = channel
-    channel["average"] = average
-
+    channel["average"] = avg_humidity.toJSONString()
 
     print(results)
     # valArray.append("\"average\" :" + "\"" + str(average) + "\"")
 
     # print(valArray)
-
     return json2.dumps(results)
         # return values
 
@@ -213,7 +217,7 @@ def toggleAutoMode():
 @test.route('/test')
 @login_required
 def testSite():
-    return render_template("test.html")
+    return render_template("test.html" )
 
 
 @createTables.route('/create')

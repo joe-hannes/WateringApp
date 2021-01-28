@@ -20,24 +20,38 @@ $(document).ready(() =>
         // obj = JSON.parse(element);
         // console.log(obj);
 
-        $('.value-div').append('<div id = channel' + i + '> </div>')
-        $('#channel' + i).append("<tr><td>Channel </td><td>" + element["channel"] + "</td></tr>");
-        $('#channel' + i).append("<tr><td>Value</td><td>" + element["value"] + "</td></tr>");
-        $('#channel' + i).append("<tr><td>Percent </td> <td>" + element["percentString"] + "</td></tr>");
-        $('#channel' + i).append("<tr><td>Active </td> <td id='activeCell" + i + "'  ></td></tr>");
+        $('.value-div').append('<div id = "channel' + i + '" > </div>');
+
+
+        $('#channel' + i).append("<tr><td>Channel</td><td class='value'>" + element["channel"] + "</td></tr>");
+        $('#channel' + i).append("<tr><td>Value</td><td class='value'>" + element["value"] + "</td></tr>");
+        $('#channel' + i).append("<tr><td>Percent </td> <td class='value'>" + element["percentString"] + "</td></tr>");
+
         if (element['active'] == 1)
         {
+          $('#channel' + i).append("<tr><td>Active </td> <td id='activeCell" + i + "' class='value'></td></tr>");
           $('#activeCell' + i).append('<div style="border-radius:5px; height:10px; width:10px; background-color:green"> </div>');
         }
         else
         {
+          $('#channel' + i).append("<tr><td>Inactive </td> <td id='activeCell" + i + "' class='value'  ></td></tr>");
           $('#activeCell' + i).append('<div style="border-radius:5px; height:10px; width:10px; background-color:red"> </div>');
         }
-        $('#channel' + i).css({'border': 1 + 'px solid red', 'float' : 'left', 'margin' : 10 + 'px', 'padding' : 10 + 'px'});
+
+        $('#channel' + i).css({'border': 1 + 'px solid red', 'margin' : 10 + 'px', 'padding' : 10 + 'px', 'width': 8 + 'em' });
         i++;
+        ;
       }
-      $('.value-div').append("<tr><td>Average </td> <td>" + obj["results"]["average"] + "</td></tr>");
+
+
+      $('.avg-div').append('<tr><td>Value</td><td class="value">' + obj.results.average.value + ' </tr></td>');
+      $('.avg-div').append('<tr><td>Percent</td> <td class="value">' + obj.results.average.percentString + ' </tr></td>');
+      $('.avg-div').css({"margin": "auto", "width": 50 + '%', 'border': 1 + 'px solid red', 'display':'flex', "justify-content":"center", 'flex-wrap':'wrap'});
+      $('.value').css({ 'padding-left': 5 + 'px' });
+      $('.value-div').css({'border': 1 + 'px solid red'});
+      $('.value-div').css({'display':'flex', "justify-content":"center", 'flex-wrap':'wrap'});
+
+}});
+
 
   }});
-  }
-});

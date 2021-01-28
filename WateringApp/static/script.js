@@ -17,8 +17,8 @@ function ajaxRequest()
   console.log('result: ' + result);
   var obj = JSON.parse(result);
   console.log(obj);
-  $('#value-text').html(obj[0].percentString)
-  animateProgressBar(obj[0].percent)
+  $('#value-text').html(obj["results"]["channel"][1].percentString)
+  animateProgressBar(obj["results"]["channel"][1].percent)
 }});
 }
 
@@ -40,7 +40,7 @@ function getWidgetState()
     switch (result)
     {
       case "False":
-        console.log("FLase Case");
+        console.log("False Case");
         $('#playtopause').css('visibility', 'visible');
         $('#pausetoplay').css('visibility', 'hidden');
         $('#active-icon').css('visibility', 'hidden');

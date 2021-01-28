@@ -15,7 +15,7 @@ class SoilSensor:
 
     def getHumidity(self):
         raw_val = self.__adc.read_adc(self.__channel, gain=self.__GAIN)
-        print('raw value: ' + str(raw_val))
+        # print('raw value: ' + str(raw_val))
         humidity = self.__humidity.intToHumidity(raw_val)
         hum_val = humidity.getValue()
         if hum_val < humidity.getMinValue() and hum_val > 100:
@@ -24,12 +24,3 @@ class SoilSensor:
             humidity.setMaxValue(hum_val)
         # self.__adc.stop_adc();
         return humidity
-
-
-
-
-
-
-    # def getHumidity(self):
-    #
-    #     return humidity

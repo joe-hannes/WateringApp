@@ -30,7 +30,7 @@ class WateringSystem(object):
         self.__ws_status = 0
         self.statusText = ""
         self.__humidity = Humidity(900)
-        self.__sensor = SoilSensor()
+        self.__sensor = SoilSensor(1)
 
 
     def stop(self):
@@ -61,7 +61,7 @@ class WateringSystem(object):
         time.sleep(3);
         daemon = threading.currentThread()
         while True:
-            humidity = self.__sensor.getHumidity(1)
+            humidity = self.__sensor.getHumidity()
             print("humidity: " + str(humidity.getValue()))
             print("STOP: " + str(STOP))
             if humidity.getValue() > 900 :
@@ -71,7 +71,7 @@ class WateringSystem(object):
                 currentTime = time.time()
                 counter+=1
                 print("Counter: " + str(counter))
-                print('Channel 1: {0}'.format(self.__sensor.getHumidity(1).getValue()))
+                print('Channel 1: {0}'.format(self.__sensor.getHumidity().getValue()))
                 print("Low humidity Level. Starting pump.")
                 self.__ws_status = 1
                 self.decodeStatus()
@@ -82,7 +82,7 @@ class WateringSystem(object):
                 counter = 0
                 self.__ws_status = 0
                 self.decodeStatus()
-                print('Channel 3: {0}'.format(self.__sensor.getHumidity(3).getValue()))
+                print('Channel 3: {0}'.format(self.__sensor.getHumidity().getValue()))
                 self.__motor.stop()
                 time.sleep(30)
 
