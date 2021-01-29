@@ -91,7 +91,7 @@ function animateProgressBar(data)
   console.log(value);
   // Calculate the percentage of the total length
   // let to = length * ((100 - value) / 100);
-  let to =  (length/100) *  (100 - data)
+  let to =  (length/100) *  (100 - data);
 
 
   // Trigger Layout in Safari hack https://jakearchibald.com/2013/animated-line-drawing-svg/

@@ -13,3 +13,4 @@ class User(db.Model, UserMixin):
 class Widget(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     widget_state = db.Column(db.Boolean)
+    activation_level = db.Column(db.Integer)

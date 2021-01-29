@@ -1,6 +1,6 @@
 
 from flask_user import login_required
-from flask import Flask, render_template, Blueprint, g
+from flask import Flask, render_template, Blueprint, g, request
 
 import threading
 
@@ -22,8 +22,10 @@ import json as json2
 import time
 
 import requests
+import json
 
 import werkzeug
+import os
 
 DATABASE = 'sqlite3.db'
 
@@ -45,6 +47,11 @@ createTables = Blueprint('createTables', __name__)
 initialCode = Blueprint('initialCode', __name__)
 
 badReq = Blueprint('badReq', __name__)
+
+restartView = Blueprint('restartView', __name__)
+updateActivationLevelView = Blueprint('updateActivationLevelView', __name__)
+
+getActivationLevelView = Blueprint('getActivationLevelView', __name__)
 
 assertionError = Blueprint('assertionError', __name__)
 
@@ -214,6 +221,33 @@ def toggleAutoMode():
 
     return str(Widget.query.first().widget_state)
 
+@restartView.route("/restart")
+@login_required
+def restart():
+    os.system('sudo reboot now')
+    return 'restarting'
+
+@updateActivationLevelView.route("/updateActivationLevel", methods=['POST'])
+@login_required
+def updateActivationLevel():
+    if request.method == "POST":
+        print('activation_level: ' + str(request.form['data']))
+        Widget.query.first().activation_level = request.form['data']
+        db.session.commit()
+
+
+    return 'updated Activation Level'
+
+@getActivationLevelView.route("/getActivationLevel", methods=['POST'])
+@login_required
+def getActivationLevel():
+    if request.method == "POST":
+        value = Widget.query.first().activation_level
+
+
+
+    return str(value)
+
 @test.route('/test')
 @login_required
 def testSite():
@@ -224,9 +258,9 @@ def testSite():
 @login_required
 def testSite():
     db.create_all()
-    widget = Widget(widget_state= False)
-    db.session.add(widget)
-    db.session.commit()
+    widget = Widget(widget_state= False, activation_level= 65)
+    # db.session.add(widget)
+    # db.session.commit()
     return "created all tables!"
 
 @badReq.errorhandler(werkzeug.exceptions.NotFound)

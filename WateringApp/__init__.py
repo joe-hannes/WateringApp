@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 from .extensions import db
 
-from .views import main, json, pump, test, autoMode, createTables, widgetState, start_runner, initialCode, badReq, assertionError
+from .views import main, json, pump, test, autoMode, createTables, widgetState, start_runner, initialCode, badReq, assertionError, restartView, updateActivationLevelView, getActivationLevelView
 
 from .Models import User, Widget
 
@@ -29,6 +29,9 @@ def createApp(config_file= 'config.py'):
     app.register_blueprint(widgetState)
     app.register_blueprint(initialCode)
     app.register_blueprint(badReq)
+    app.register_blueprint(restartView)
+    app.register_blueprint(updateActivationLevelView)
+    app.register_blueprint(getActivationLevelView)
     # app.register_blueprint(assertionError)
 
     db.init_app(app)
