@@ -55,39 +55,23 @@ getActivationLevelView = Blueprint('getActivationLevelView', __name__)
 
 assertionError = Blueprint('assertionError', __name__)
 
+wsys = WateringSystem()
+
 
 def startSystem(wsys):
     # do everything else
     wsys.start()
 
-def start_runner():
-    def start_loop():
-        not_started = True
-        while not_started:
-            print('In start loop')
-            try:
-                r = requests.get('http://127.0.0.1:5000/')
-                print(r)
-                if r.status_code == 200:
-                    print('Server started, quiting start_loop')
-                    not_started = False
-                print(r.status_code)
-            except:
-                print('Server not yet started')
-            time.sleep(2)
 
-    print('Started runner')
-    thread = threading.Thread(target=start_loop)
-    thread.start()
 
-@initialCode.before_app_first_request
-def activate_job():
-    if Widget.query.first().widget_state:
-        wsys = WateringSystem()
-        daemon = threading.Thread(name='startSystem',
-                                  target=startSystem, args=(wsys,))
-        daemon.start()
-        print("started wsys")
+# @initialCode.before_app_first_request
+# def activate_job():
+#     if Widget.query.first().widget_state:
+#         wsys = WateringSystem()
+#         daemon = threading.Thread(name='startSystem',
+#                                   target=startSystem, args=(wsys,))
+#         daemon.start()
+#         print("started wsys")
     # def run_job():
     #     not_started = True
     #     while not_started:
@@ -113,10 +97,10 @@ def activate_job():
 def index():
     # values = SoilSensor().getHumidity(0)
     values = SoilSensor(1).getHumidity()
-    print("values:" + str(values.getValue()))
+    # print("values:" + str(values.getValue()))
     values = values.inPercent()
     state = Widget.query.first().widget_state
-    return render_template("index.html", data= state)
+    return render_template("index.html", data = state)
 
 @json.route("/json")
 def serveJSON():
@@ -141,14 +125,14 @@ def serveJSON():
         json["channel"] = i
         valArray.append(json)
 
-    print('activeAmount: ' + str(activeAmount))
+    # print('activeAmount: ' + str(activeAmount))
     average = round(average / activeAmount)
     avg_humidity = Humidity.intToHumidity(average)
     channel["channel"] = valArray
     results["results"] = channel
     channel["average"] = avg_humidity.toJSONString()
 
-    print(results)
+    # print(results)
     # valArray.append("\"average\" :" + "\"" + str(average) + "\"")
 
     # print(valArray)
@@ -197,9 +181,9 @@ def toggleAutoMode():
     # for row in rows:
     #     print(row)
 
-    wsys = WateringSystem()
-    daemon = threading.Thread(name='startSystem',
-                              target=startSystem, args=(wsys,))
+
+    
+    # wsys.setS
 
 
     if Widget.query.first().widget_state:
@@ -207,15 +191,17 @@ def toggleAutoMode():
         Widget.query.first().widget_state = False
         db.session.commit()
         STOP = True
-        daemon.stop = False
+        # daemon.stop = False
+        wsys.setState(False)
 
     else:
 
         # Set as a daemon so it will be killed once the main thread is dead.
-        daemon.setDaemon(True)
-        daemon.start()
-        Widget.query.first().widget_state = True
+        # daemon.setDaemon(True)
+        # daemon.start()
+        Widget.query.first().widget_stwate = True
         db.session.commit()
+        wsys.setState(True)
 
 
 
@@ -231,9 +217,12 @@ def restart():
 @login_required
 def updateActivationLevel():
     if request.method == "POST":
-        print('activation_level: ' + str(request.form['data']))
+        activation_level = request.form['data']
+        # print('activation_level: ' + str(activation_level))
         Widget.query.first().activation_level = request.form['data']
         db.session.commit()
+        wsys.setActivationLevel(int(activation_level))
+
 
 
     return 'updated Activation Level'

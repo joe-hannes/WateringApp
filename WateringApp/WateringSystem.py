@@ -12,6 +12,10 @@ import threading
 from WateringApp.Fachwerte.Humidity import Humidity
 from WateringApp.SoilSensor import SoilSensor
 
+from flask import g, Flask
+
+from .Models import Widget
+
 
 STOP = False
 
@@ -32,6 +36,10 @@ class WateringSystem(object):
         self.__humidity = Humidity(900)
         self.__sensor = SoilSensor(1)
 
+        self.__activationLevel = 0
+        self.__state = 0
+        self.start()
+
 
     def stop(self):
         self.__stop_flag = True
@@ -39,6 +47,18 @@ class WateringSystem(object):
 
     def getStatus(self):
         return self.__ws_status
+
+    def setActivationLevel(self, value):
+        self.__activationLevel = value
+
+    def getActivationLevel(self):
+        return self.__activationLevel
+
+    def setState(self, value):
+        self.__activationLevel = value
+
+    def getState(self):
+        return self.__activationLevel
 
 
 
@@ -52,7 +72,7 @@ class WateringSystem(object):
             self.statusText = "Error. Pump running for too long. Automatic System deactivated. Please use /start to start it again."
 
 
-    def start(self):
+    def startSystem(self):
         self.__motor.stop()
         start = time.time()
         global STOP
@@ -60,11 +80,23 @@ class WateringSystem(object):
         channels = 4
         time.sleep(3);
         daemon = threading.currentThread()
+
+
+        # g.db.Widget.query.first().activationLevel
+
+        # self.__activationLevel = g.db.Widget.query.first().activationLevel
+        # self.__state = g.db.Widget.query.first().widgetState
+
+        daemon = threading.Thread(name='startSystem',
+                                  target=startSystem, args=(wsys,))
+
+
+
         while True:
             humidity = self.__sensor.getHumidity()
-            print("humidity: " + str(humidity.getValue()))
+            print("activationLevel: " + str(self.__activationLevel))
             print("STOP: " + str(STOP))
-            if humidity.getValue() > 900 :
+            if (humidity.inPercent() < self.__activationLevel) and (self.__state):
                 startTime = time.time()
                 currentTime = startTime
 

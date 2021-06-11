@@ -34,7 +34,7 @@ class Humidity():
 
         '''Converts an Integer to a Humidity Unit
 
-        @param value: the value to Converts
+        @param value: the value to convert
         @return the Humidity Unit
 
         '''

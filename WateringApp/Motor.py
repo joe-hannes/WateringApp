@@ -23,7 +23,8 @@ class Motor(object):
         delay =  0.0005
         start = time.time()
 
-        while time.time() - start <= 30.0:
+        # while time.time() - start <= 30.0:
+        while True:
             for i in range(steps):
                 # print("step: " + str(i))
                 GPIO.output(self.__stepPin, GPIO.LOW)

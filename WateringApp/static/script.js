@@ -14,9 +14,9 @@ function ajaxRequest()
 {
   $.ajax({url:'/json', success: (result) =>
 {
-  console.log('result: ' + result);
+  // console.log('result: ' + result);
   var obj = JSON.parse(result);
-  console.log(obj);
+  // console.log(obj);
   $('#value-text').html(obj["results"]["channel"][1].percentString)
   animateProgressBar(obj["results"]["channel"][1].percent)
 }});
@@ -24,7 +24,7 @@ function ajaxRequest()
 
 function toggleWidgetState()
 {
-  console.log("Widget FUnction");
+  console.log("Widget Function");
   $.ajax({url:'/toggleAutoMode', success: (result) =>
   {
     console.log(result);
@@ -86,9 +86,9 @@ function animateProgressBar(data)
   // Get the length of the path
   let length = path.getTotalLength();
 
-  console.log(length);
+  // console.log(length);
   let value = parseInt(path.parentNode.parentNode.getAttribute('data-value'));
-  console.log(value);
+  // console.log(value);
   // Calculate the percentage of the total length
   // let to = length * ((100 - value) / 100);
   let to =  (length/100) *  (100 - data);
@@ -101,7 +101,7 @@ function animateProgressBar(data)
 }
 
 // onClick Event Handlers
-// handle button clicks pause-button
+// handle button clicks pause-buttonn
 
 
 
@@ -109,8 +109,16 @@ function animateProgressBar(data)
 $('#drop-circle').on('click', () =>
 {
   activatePump();
+  console.log('path_mask');
   $( "div.success" ).fadeIn( 300 ).delay( 1500 ).fadeOut( 400 );
 });
+
+$('#cog-circle').on('click', () =>
+{
+  window.location = '/test';
+});
+
+
 
 // $('#play-btn').on('click', () =>
 // {

@@ -3,14 +3,54 @@ from flask import Flask, Blueprint
 from flask_user import UserManager
 from flask_sqlalchemy import SQLAlchemy
 
+import time
+
+import sqlite3
+
+import threading
+
 from .extensions import db
 
-from .views import main, json, pump, test, autoMode, createTables, widgetState, start_runner, initialCode, badReq, assertionError, restartView, updateActivationLevelView, getActivationLevelView
+from .views import main, json, pump, test, autoMode, createTables, widgetState, initialCode, badReq, assertionError, restartView, updateActivationLevelView, getActivationLevelView
 
 from .Models import User, Widget
 
+from .WateringSystem import WateringSystem
+
+from flask_fontawesome import FontAwesome
+
 # import requests
 
+
+# def start_runner():
+#     def start_loop():
+#         not_started = True
+#         while not_started:
+#             print('In start loop')
+#             try:
+#                 r = requests.get('http://127.0.0.1:5000/')
+#                 print(r)
+#                 if r.status_code == 200:
+#                     print('Server started, quiting start_loop')
+#                     not_started = False
+#                     wsys = WateringSystem()
+#                     wsys.start()
+#
+#                 print(r.status_code)
+#             except:
+#                 print('Server not yet started')
+#             time.sleep(2)
+#
+#     print('Started runner')
+    # thread = threading.Thread(target=start_loop)
+    # thread.start()
+    # start_loop()
+
+# def start_wsys():
+#     conn = sqlite3.connect('sqlite3.db')
+#     cursor = conn.cursor()
+#     cursor.execute=
+#     pass
 
 
 
@@ -19,6 +59,8 @@ def createApp(config_file= 'config.py'):
     app.config.from_pyfile(config_file)
 
     user_manager = UserManager(app, db, User)
+
+    fa = FontAwesome(app)
 
     app.register_blueprint(main)
     app.register_blueprint(json)
@@ -36,7 +78,7 @@ def createApp(config_file= 'config.py'):
 
     db.init_app(app)
 
-    start_runner()
+    # start_runner()
 
 
     # app.run(threaded=True, host="0.0.0.0", port="8080")
@@ -46,16 +88,14 @@ def createApp(config_file= 'config.py'):
 
 
 
-if __name__ == "__main__":
-    # Start the server in a new thread
-
-    daemon = threading.Thread(name='startServer',
-                              target=startServer)
-
-    # Set as a daemon so it will be killed once the main thread is dead.
-    daemon.setDaemon(True)
-    daemon.start()
-
+# if __name__ == "__main__":
+#     # Start the server in a new thread
+#
+#     daemon = threading.Thread(name='startServer',
+#                               target=startServer)
+#
+#     # Set as a daemon so it will be killed once the main thread is dead.
+#     daemon.setDaemon(True)
+#     daemon.start()
+#     print('lulz')
     # do everything else
-    wsys = WateringSystem()
-    wsys.start()

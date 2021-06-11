@@ -1,31 +1,49 @@
-{% extends 'flask_user/_public_base.html' %}
+{% extends 'main.html' %}
 
-{% block menu %}
-
+{% block extra_css %}
+     {{ fontawesome_html() }}
 {% endblock %}
 
-{% block content %}
+
+
+
+
+{% block header %}
 
 <!-- Sidebar -->
  <div class="bg-light border-right" id="sidebar-wrapper">
    <div class="list-group list-group-flush">
-      <a id='menu' class="list-group-item list-group-item-action bg-light">Menu</a>
+    <div id='app-bar' class="list-group-item list-group-item-action bg-light "> <span class='fas fa-bars'></span>  <a id='menu' > WateringApp </a>
+      </div>
      <a id='restart-item' class="list-group-item list-group-item-action bg-light">Restart</a>
+
+     <a id='user-item' class="list-group-item list-group-item-action bg-light">User Management</a>
+
+     <a id='statistics-item' class="list-group-item list-group-item-action bg-light">Statistics</a>
+
+     <a id='widget-item' class="list-group-item list-group-item-action bg-light">Widget</a>
+
      <div id='activation-level-item'>
      <div id='range-div' class="list-group-item list-group-item-action bg-light">
-       <div style='float:left;'>Pump Activation </div>
+       <div id='pump-activation-label' style='float:left;'>Pump Activation </div>
        <div id='range-value'></div>
        <input id="activation-input" type="range" min ='0' max='100'></input>
      </div>
      </div>
+
    </div>
  </div>
  <!-- /#sidebar-wrapper -->
+
+ {% endblock %}
+
+ {% block body %}
 
   <div class="value-div"></div>
   <div class="avg-div"></div>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-sidebar/3.3.2/jquery.sidebar.min.js"></script>
   <script type=text/javascript src="{{url_for('static', filename='scriptTest.js') }}"></script>
+
 
 {% endblock %}
