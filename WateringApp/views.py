@@ -182,7 +182,7 @@ def toggleAutoMode():
     #     print(row)
 
 
-    
+
     # wsys.setS
 
 
@@ -244,18 +244,18 @@ def testSite():
 
 
 @createTables.route('/create')
-@login_required
+# @login_required
 def testSite():
     db.create_all()
     widget = Widget(widget_state= False, activation_level= 65)
-    # db.session.add(widget)
-    # db.session.commit()
+    db.session.add(widget)
+    db.session.commit()
     return "created all tables!"
 
-@badReq.errorhandler(werkzeug.exceptions.NotFound)
-def handle_bad_request(e):
-    return 'not found!', 404
+# @badReq.errorhandler(werkzeug.exceptions.NotFound)
+# def handle_bad_request(e):
+#     return 'not found!', 404
 
-@assertionError.errorhandler(werkzeug.exceptions)
-def handle_bad_request(e):
-    return 'Assertion error'
+# @assertionError.errorhandler(werkzeug.exceptions)
+# def handle_bad_request(e):
+#     return 'Assertion error'

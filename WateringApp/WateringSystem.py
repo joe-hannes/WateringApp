@@ -38,7 +38,7 @@ class WateringSystem(object):
 
         self.__activationLevel = 0
         self.__state = 0
-        self.start()
+        self.startSystem()
 
 
     def stop(self):
@@ -88,7 +88,7 @@ class WateringSystem(object):
         # self.__state = g.db.Widget.query.first().widgetState
 
         daemon = threading.Thread(name='startSystem',
-                                  target=startSystem, args=(wsys,))
+                                  target=self.startSystem, args=())
 
 
 

@@ -5,8 +5,8 @@ from flask_sqlalchemy import SQLAlchemy
 
 import time
 
-import sqlite3
 
+import sqlite3
 import threading
 
 from .extensions import db
