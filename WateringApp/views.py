@@ -192,16 +192,16 @@ def toggleAutoMode():
         db.session.commit()
         STOP = True
         # daemon.stop = False
-        wsys.setState(False)
+        wsys.set_state(False)
 
     else:
 
         # Set as a daemon so it will be killed once the main thread is dead.
         # daemon.setDaemon(True)
         # daemon.start()
-        Widget.query.first().widget_stwate = True
+        Widget.query.first().widget_state = True
         db.session.commit()
-        wsys.setState(True)
+        wsys.set_state(True)
 
 
 
@@ -221,7 +221,7 @@ def updateActivationLevel():
         # print('activation_level: ' + str(activation_level))
         Widget.query.first().activation_level = request.form['data']
         db.session.commit()
-        wsys.setActivationLevel(int(activation_level))
+        wsys.set_activationLevel(int(activation_level))
 
 
 

@@ -16,6 +16,8 @@ from flask import g, Flask
 
 from .Models import Widget
 
+from influxdb import InfluxDBClient
+
 
 STOP = False
 
@@ -45,20 +47,41 @@ class WateringSystem(object):
         self.__stop_flag = True
 
 
-    def getStatus(self):
+    def get_status(self):
         return self.__ws_status
 
-    def setActivationLevel(self, value):
+    def set_activationLevel(self, value):
         self.__activationLevel = value
 
-    def getActivationLevel(self):
+    def get_activationLevel(self):
         return self.__activationLevel
 
-    def setState(self, value):
+    def set_state(self, value):
         self.__activationLevel = value
 
-    def getState(self):
+    def get_state(self):
         return self.__activationLevel
+
+    def log_data(self):
+        percent = humidity.inPercent()
+        value = humidity.getValue()
+
+        json_body = [
+            {
+                "measurement": "humidity",
+                "fields": {
+                    "value": value,
+                    "percent": percent
+                }
+            }
+
+        ]
+
+        client = InfluxDBClient(host='localhost', port=8086)
+        client.switch_database('humidity')
+        wasSuccessfull = client.write_points(json_body)
+        return wasSuccessfull
+
 
 
 
@@ -96,6 +119,13 @@ class WateringSystem(object):
             humidity = self.__sensor.getHumidity()
             print("activationLevel: " + str(self.__activationLevel))
             print("STOP: " + str(STOP))
+
+            if time.time() - start > 60:
+                start = time.time()
+                log_data(humidity)
+                print('logged data to influxdb')
+
+
             if (humidity.inPercent() < self.__activationLevel) and (self.__state):
                 startTime = time.time()
                 currentTime = startTime
