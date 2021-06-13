@@ -38,6 +38,8 @@ test = Blueprint('test', __name__)
 
 statistics = Blueprint('statistics', __name__)
 
+settings = Blueprint('settings', __name__)
+
 pump = Blueprint('pump', __name__)
 
 autoMode = Blueprint('autoMode', __name__)
@@ -146,6 +148,11 @@ def serveJSON():
 @login_required
 def statistics_page():
     return render_template("statistics.html")
+
+@settings.route("/settings")
+@login_required
+def settings_page():
+    return render_template("settings.html")
 
 @pump.route("/activatePump")
 @login_required

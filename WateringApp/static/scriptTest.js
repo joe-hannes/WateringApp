@@ -101,7 +101,8 @@ $('#app-bar').on('click', () =>
 
 $('#statistics-item').on('click', () =>
 {
-  window.location = '/statistics'
+  // window.location = '/statistics'
+  window.location.href = 'http://192.168.178.41:3000/d/ASS9f7Rgz/watering-system-dashboard?tab=visualization&orgId=1&from=now-30m&to=now&kiosk';
 })
 
 

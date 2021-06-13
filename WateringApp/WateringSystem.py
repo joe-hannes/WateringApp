@@ -41,7 +41,7 @@ class WateringSystem(object):
         self.__ws_status = 0
         self.statusText = ""
         self.__humidity = Humidity(900)
-        self.__sensor = SoilSensor(1)
+        self.__sensor = (SoilSensor(1), SoilSensor(2), SoilSensor(3))
 
         self.__activationLevel = 0
         self.__state = 0
@@ -70,23 +70,34 @@ class WateringSystem(object):
 
     def log_humidity(self, humidity, interval):
 
+        json_body = []
+        i = 0
+
         print('time: {} '.format(time.time() - self.__start_time))
 
         if time.time() - self.__start_time > interval:
             self.__start_time = time.time()
-            percent = humidity.inPercent()
-            value = humidity.getValue()
+            # percent = humidity.inPercent()
+            # value = humidity.getValue()
 
-            json_body = [
-                {
-                    "measurement": "humidity",
-                    "fields": {
-                        "value": value,
-                        "percent": percent
-                    }
-                }
 
-            ]
+            for hum in humidity:
+                json_body.append(
+                    {
+                        "measurement": "humidity",
+                        "tags": {
+                            "sensor": i
+                        },
+                        "fields": {
+                            "value": hum.getValue(),
+                            "percent": hum.inPercent()
+                        }
+                    })
+                i += 1
+
+            print('json_body: {}'.format(json_body))
+
+
 
             client = InfluxDBClient(host='localhost', port=8086)
             client.switch_database('humidity')
@@ -131,7 +142,12 @@ class WateringSystem(object):
 
 
         while True:
-            humidity = self.__sensor.getHumidity()
+
+            humidity = [sensor.getHumidity() for sensor in self.__sensor]
+
+            print('humidity: {}'.format(humidity))
+
+            # humidity = self.__sensor[0].getHumidity()
             print("activationLevel: " + str(self.__activationLevel))
             print("STOP: " + str(STOP))
 
@@ -139,16 +155,16 @@ class WateringSystem(object):
             self.log_humidity(humidity, 60)
 
 
-            print('humidity_in_percent: {}'.format(humidity.inPercent()))
+            print('humidity_in_percent: {}'.format(humidity[0].inPercent()))
 
 
             # TODO: how to handle the startup scenario
             # currently doesnt do anything because self.__activationLevel == 0 append
             # self.__state == 0
-            if (humidity.inPercent() < self.__activationLevel) and (self.__state):
+            if (humidity[0].inPercent() < self.__activationLevel) and (self.__state):
                 counter+=1
                 print("Counter: " + str(counter))
-                print('Channel 1: {0}'.format(self.__sensor.getHumidity().getValue()))
+                print('Channel 1: {0}'.format(self.__sensor[0].getHumidity().getValue()))
                 print("Low humidity Level. Starting pump.")
                 self.__ws_status = 1
                 self.decodeStatus()
@@ -159,7 +175,7 @@ class WateringSystem(object):
                 counter = 0
                 self.__ws_status = 0
                 self.decodeStatus()
-                print('Channel 3: {0}'.format(self.__sensor.getHumidity().getValue()))
+                print('Channel 3: {0}'.format(self.__sensor[0].getHumidity().getValue()))
                 self.__motor.stop()
 
                 # wait a bit to not constantly check for changes
