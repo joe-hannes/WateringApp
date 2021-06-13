@@ -195,8 +195,8 @@ $('#play-circle2').on('click', () =>
   $('#pause-text').css('visibility', 'hidden');
   $('#active-icon').css('visibility', 'visible');
   $('#error-icon').css('visibility', 'hidden');
-  // $('#status-area').css('fill', '#79ab64');
-  // $('#status-area').css('stroke', '#79ab64');
+  $('#status-area').css('fill', '#79ab64');
+  $('#status-area').css('stroke', '#79ab64');
 });
 
 

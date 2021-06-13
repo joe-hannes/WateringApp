@@ -99,6 +99,11 @@ $('#app-bar').on('click', () =>
   }
 });
 
+$('#statistics-item').on('click', () =>
+{
+  window.location = '/statistics'
+})
+
 
 
 $('body').on('input', '#activation-input', () =>

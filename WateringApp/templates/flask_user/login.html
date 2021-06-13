@@ -1,5 +1,6 @@
 <html>
 <head>
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
   <link href="{{url_for('static', filename='login__style.css')}}" rel="stylesheet" type="text/css">
 </head>
 <body>
@@ -19,6 +20,8 @@
 <form action="" method="POST" class="form" role="form">
     {{ form.hidden_tag() }}
 
+    <div class='input-fields'>
+
     {# Username or Email field #}
     {% set field = form.username if user_manager.USER_ENABLE_USERNAME else form.email %}
     <div class="form-group {% if field.errors %}has-error{% endif %}">
@@ -35,7 +38,7 @@
 
     {# Password field #}
     {% set field = form.password %}
-    <div class="form-group {% if field.errors %}has-error{% endif %} input-line full-width">
+    <div class="form-group {% if field.errors %}has-error{% endif %} full-width">
         {# Label on left, "Forgot your Password?" on right #}
         <div class="row">
             <!-- <div class="col-xs-6">
@@ -56,6 +59,13 @@
         {% endif %}
     </div>
 
+  </div>
+
+    {# Remember me #}
+    {% if user_manager.USER_ENABLE_REMEMBER_ME %}
+    {{ render_checkbox_field(login_form.remember_me, class_='spacing', tabindex=130) }}
+    {% endif %}
+
     <div class="spacing">
       {% if user_manager.USER_ENABLE_REGISTER and not user_manager.USER_REQUIRE_INVITATION %}
           <a class='subtitle' href="{{ url_for('user.register') }}" tabindex='190'>
@@ -63,10 +73,7 @@
       {% endif %}
     </div>
 
-    {# Remember me #}
-    {% if user_manager.USER_ENABLE_REMEMBER_ME %}
-    {{ render_checkbox_field(login_form.remember_me, class_='spacing', tabindex=130) }}
-    {% endif %}
+
 
     {# Submit button #}
     {{ render_submit_field(form.submit, class_='ghost-round full-width' , tabindex=180) }}

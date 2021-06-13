@@ -36,6 +36,8 @@ json = Blueprint('json', __name__)
 
 test = Blueprint('test', __name__)
 
+statistics = Blueprint('statistics', __name__)
+
 pump = Blueprint('pump', __name__)
 
 autoMode = Blueprint('autoMode', __name__)
@@ -55,12 +57,13 @@ getActivationLevelView = Blueprint('getActivationLevelView', __name__)
 
 assertionError = Blueprint('assertionError', __name__)
 
+
+
+# TODO: wsys gets called every time an endpoint is accessed and needs to be made
+# persistent
 wsys = WateringSystem()
 
 
-def startSystem(wsys):
-    # do everything else
-    wsys.start()
 
 
 
@@ -138,6 +141,11 @@ def serveJSON():
     # print(valArray)
     return json2.dumps(results)
         # return values
+
+@statistics.route("/statistics")
+@login_required
+def statistics_page():
+    return render_template("statistics.html")
 
 @pump.route("/activatePump")
 @login_required
@@ -218,7 +226,7 @@ def restart():
 def updateActivationLevel():
     if request.method == "POST":
         activation_level = request.form['data']
-        # print('activation_level: ' + str(activation_level))
+        print('activation_level: ' + str(activation_level))
         Widget.query.first().activation_level = request.form['data']
         db.session.commit()
         wsys.set_activationLevel(int(activation_level))

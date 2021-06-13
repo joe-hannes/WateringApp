@@ -11,7 +11,7 @@ import threading
 
 from .extensions import db
 
-from .views import main, json, pump, test, autoMode, createTables, widgetState, initialCode, badReq, assertionError, restartView, updateActivationLevelView, getActivationLevelView
+from .views import main, json, statistics, pump, test, autoMode, createTables, widgetState, initialCode, badReq, assertionError, restartView, updateActivationLevelView, getActivationLevelView
 
 from .Models import User, Widget
 
@@ -66,6 +66,7 @@ def createApp(config_file= 'config.py'):
     app.register_blueprint(json)
     app.register_blueprint(pump)
     app.register_blueprint(test)
+    app.register_blueprint(statistics)
     app.register_blueprint(autoMode)
     app.register_blueprint(createTables)
     app.register_blueprint(widgetState)

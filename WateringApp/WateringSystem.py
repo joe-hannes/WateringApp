@@ -19,12 +19,17 @@ from .Models import Widget
 from influxdb import InfluxDBClient
 
 
+# import logging
+
+
 STOP = False
 
 class WateringSystem(object):
 
 
     def __init__(self):
+        # logging.basicConfig()
+        # logging.getLogger().setLevel(logging.WARN)
 
         self.__adc= ADS1015()
         self.__motor = Motor()
@@ -40,7 +45,8 @@ class WateringSystem(object):
 
         self.__activationLevel = 0
         self.__state = 0
-        self.startSystem()
+        self.__start_time = time.time()
+        self.start()
 
 
     def stop(self):
@@ -62,25 +68,31 @@ class WateringSystem(object):
     def get_state(self):
         return self.__activationLevel
 
-    def log_data(self):
-        percent = humidity.inPercent()
-        value = humidity.getValue()
+    def log_humidity(self, humidity, interval):
 
-        json_body = [
-            {
-                "measurement": "humidity",
-                "fields": {
-                    "value": value,
-                    "percent": percent
+        print('time: {} '.format(time.time() - self.__start_time))
+
+        if time.time() - self.__start_time > interval:
+            self.__start_time = time.time()
+            percent = humidity.inPercent()
+            value = humidity.getValue()
+
+            json_body = [
+                {
+                    "measurement": "humidity",
+                    "fields": {
+                        "value": value,
+                        "percent": percent
+                    }
                 }
-            }
 
-        ]
+            ]
 
-        client = InfluxDBClient(host='localhost', port=8086)
-        client.switch_database('humidity')
-        wasSuccessfull = client.write_points(json_body)
-        return wasSuccessfull
+            client = InfluxDBClient(host='localhost', port=8086)
+            client.switch_database('humidity')
+            wasSuccessfull = client.write_points(json_body)
+            print('logged data to influxdb')
+        # return wasSuccessfull
 
 
 
@@ -93,6 +105,10 @@ class WateringSystem(object):
             self.statusText = "Running Pump"
         if self.__ws_status == -1:
             self.statusText = "Error. Pump running for too long. Automatic System deactivated. Please use /start to start it again."
+
+
+
+
 
 
     def startSystem(self):
@@ -110,8 +126,7 @@ class WateringSystem(object):
         # self.__activationLevel = g.db.Widget.query.first().activationLevel
         # self.__state = g.db.Widget.query.first().widgetState
 
-        daemon = threading.Thread(name='startSystem',
-                                  target=self.startSystem, args=())
+
 
 
 
@@ -120,17 +135,17 @@ class WateringSystem(object):
             print("activationLevel: " + str(self.__activationLevel))
             print("STOP: " + str(STOP))
 
-            if time.time() - start > 60:
-                start = time.time()
-                log_data(humidity)
-                print('logged data to influxdb')
+
+            self.log_humidity(humidity, 60)
 
 
+            print('humidity_in_percent: {}'.format(humidity.inPercent()))
+
+
+            # TODO: how to handle the startup scenario
+            # currently doesnt do anything because self.__activationLevel == 0 append
+            # self.__state == 0
             if (humidity.inPercent() < self.__activationLevel) and (self.__state):
-                startTime = time.time()
-                currentTime = startTime
-
-                currentTime = time.time()
                 counter+=1
                 print("Counter: " + str(counter))
                 print('Channel 1: {0}'.format(self.__sensor.getHumidity().getValue()))
@@ -146,6 +161,8 @@ class WateringSystem(object):
                 self.decodeStatus()
                 print('Channel 3: {0}'.format(self.__sensor.getHumidity().getValue()))
                 self.__motor.stop()
+
+                # wait a bit to not constantly check for changes
                 time.sleep(30)
 
             if counter == 5:
@@ -155,16 +172,22 @@ class WateringSystem(object):
                 self.__motor.stop()
                 break
 
-            if STOP :
-                print(self.__errorMsg)
-                self.__ws_status = -1
-                self.decodeStatus()
-                self.__motor.stop()
-                break
+            # if STOP :
+            #     print(self.__errorMsg)
+            #     self.__ws_status = -1
+            #     self.decodeStatus()
+            #     self.__motor.stop()
+            #     break
 
-            if getattr(daemon,"stop", True) :
-                print(self.__errorMsg)
-                self.__ws_status = -1
-                self.decodeStatus()
-                self.__motor.stop()
-                break
+            # if getattr(daemon,"stop", True) :
+            #     print(self.__errorMsg)
+            #     self.__ws_status = -1
+            #     self.decodeStatus()
+            #     self.__motor.stop()
+            #     break
+
+    def start(self):
+        print('starting system in new thread')
+        daemon = threading.Thread(name='startSystem',
+                                  target=self.startSystem)
+        daemon.start()
