@@ -3,7 +3,6 @@ $(document).ready(() =>
 {
 
   getActivationLevel();
-
   ajaxRequest();
 
   function ajaxRequest()
@@ -67,6 +66,7 @@ $('#user-item').css({ 'display':'none'});
 $('#user-item').css({ 'color':'black'});
 $('#statistics-item').css({ 'display':'none'});
 $('#statistics-item').css({ 'color':'black'});
+$('#settings-item').css({ 'display':'none'});
 $('#activation-level-item').css({ 'display':'none'});
 $('#range-div').css({'color':'black'});
 $('#range-value').css({'color':'black'});
@@ -87,6 +87,7 @@ $('#app-bar').on('click', () =>
     $('#user-item').css({"display":'none'});
     $('#statistics-item').css({"display":'none'});
     $('#widget-item').css({"display":'none'});
+    $('#settings-item').css({"display":'none'});
   }
   else
   {
@@ -95,15 +96,40 @@ $('#app-bar').on('click', () =>
     $('#user-item').css({"display":'block'});
     $('#statistics-item').css({"display":'block'});
     $('#widget-item').css({"display":'block'});
+    $('#settings-item').css({"display":'block'});
+
 
   }
 });
 
 $('#statistics-item').on('click', () =>
 {
-  // window.location = '/statistics'
-  window.location.href = 'http://192.168.178.41:3000/d/ASS9f7Rgz/watering-system-dashboard?tab=visualization&orgId=1&from=now-30m&to=now&kiosk';
-})
+
+  if($(window).width() < 767)
+  {
+    window.location.href ="http://192.168.178.41:3000/d/FgnUzHRgz/watering-system-dashboard-mobile?orgId=1&from=now-30m&to=now";
+
+  }
+
+  else
+  {
+    window.location = '/statistics'
+  }
+
+});
+
+
+$('#settings-item').on('click', () =>
+{
+
+  {
+    window.location = '/settings'
+  }
+
+});
+
+
+
 
 
 
@@ -138,14 +164,14 @@ function updateActivationLevel()
   console.log(data);
   $.ajax(
     {
-     type: 'POST',
-     url: "/updateActivationLevel",
-     data: {data: data},
+       type: 'POST',
+       url: "/updateActivationLevel",
+       data: {data: data},
 
-     success: (result) =>
-      {
-        console.log("Activation Level Updated Successfully");
-      }
+       success: (result) =>
+        {
+          console.log("Activation Level Updated Successfully");
+        }
     });
 }
 

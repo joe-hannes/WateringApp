@@ -8,7 +8,7 @@ from .WateringSystem import WateringSystem, STOP
 
 from .extensions import db
 
-from .Models import Widget
+from .Models import Widget, User, Settings
 
 import sqlite3
 
@@ -39,6 +39,10 @@ test = Blueprint('test', __name__)
 statistics = Blueprint('statistics', __name__)
 
 settings = Blueprint('settings', __name__)
+
+get_temperature = Blueprint('get_temperature', __name__)
+
+update_user = Blueprint('update_user', __name__)
 
 pump = Blueprint('pump', __name__)
 
@@ -149,10 +153,13 @@ def serveJSON():
 def statistics_page():
     return render_template("statistics.html")
 
+
+
 @settings.route("/settings")
 @login_required
 def settings_page():
-    return render_template("settings.html")
+    # settings = User.query.filter_by('username')
+    return render_template("settings.html", data = settings)
 
 @pump.route("/activatePump")
 @login_required
@@ -176,11 +183,47 @@ def getWidgetState():
     #
     # for row in rows:
     #     print(row)
+
+    # TODO: somethings not working
     db_entry = Widget.query.first().widget_state
-    print(str(db_entry))
+    wsys.set_state(db_entry)
+
+    return 'retrieved widget state: {}'.format(db_entry)
 
 
-    return str(db_entry)
+@update_user.route("/updateUser", methods=['POST'])
+@login_required
+def update_user_ep():
+    if request.method == "POST":
+        if request.is_json:
+            data = request.get_json()
+            print('location: {}'.format(data))
+            db.session.query(Settings).filter_by(id=1).update(data)
+            db.session.commit()
+            # Settings.query.first().reservoir_size = data['reservoirSize']
+            # db.session.commit()
+            # Settings.query.first().reservoir_warn_level = data['reservoirWarn']
+            # db.session.commit()
+    return 'updated Settings successfully'
+
+
+@get_temperature.route("/getTemperature", methods=['POST'])
+@login_required
+def get_temperature_ep():
+    base_url = 'http://api.openweathermap.org/data/2.5/weather'
+    location = Settings.query.first().location
+    api_key = 'aec85d0e0f52e5c5e509ff4142a3a822'
+    concat_url = base_url + '?q=' + location + '&appid=' + api_key
+    conversion_val = 273.15
+
+    print('concat_url: {}'.format(concat_url))
+
+    r = requests.get(concat_url)
+
+    print('response: {}'.format(r.text))
+    # temperature = r.main.temp - convertion_val
+
+    return str(r.json()['main']['temp'] - conversion_val)
 
 @autoMode.route("/toggleAutoMode")
 @login_required

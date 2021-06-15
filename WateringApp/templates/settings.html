@@ -1,9 +1,26 @@
 {% extends 'flask_user/_public_base.html' %}
 
 {% block content %}
+<label for="input-reservoir">Set the size of the reservoir in ml</label>
+<input id='input-reservoir' type='text'></<input>
 
+<label for='input-location'>Location</label>
+<input type="text" id ="input-location"></input>
+
+<label for="input-reservoir-warn">Notify when reservoir water level is below:</label>
+<input id='input-reservoir-warn' type='text'></<input>
 
 <label for='activation-level'>Activation Level</label>
-<input id='activation-level' min='0' max='100' type='range'>
+<input id='input-activation-level' min='0' max='100' type='range'></input>
+
+<p>temperature: </p> <p id='temp'></p>
+<button id='temperature-submit' type="submit" name="button"></button>
+
+
+<button id='settings-submit' type="submit" name="button"></button>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-sidebar/3.3.2/jquery.sidebar.min.js"></script>
+<script type=text/javascript src="{{url_for('static', filename='settings__script.js') }}"></script>
 
 {% endblock %}
