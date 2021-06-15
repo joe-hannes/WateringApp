@@ -3,29 +3,46 @@
 # License: Public Domain
 import time
 
-from WateringApp.Motor import Motor
+from WateringApp.materialien.Motor import Motor
 
 # Import the ADS1x15 module.
 from .ADS1x15 import ADS1015
 import threading
 
 from WateringApp.Fachwerte.Humidity import Humidity
-from WateringApp.SoilSensor import SoilSensor
+from WateringApp.materialien.SoilSensor import SoilSensor
 
 from flask import g, Flask
 
-from .Models import Widget
+from .Models import Widget, Settings
 
 from influxdb import InfluxDBClient
 
+from .extensions import db
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
+
+
+from .config import SQLALCHEMY_DATABASE_URI
+
+
+
+import math
+
 
 # import logging
+
+engine = create_engine(SQLALCHEMY_DATABASE_URI)
+session = Session(engine)
 
 
 STOP = False
 
 class WateringSystem(object):
 
+    activation_level = 0
+    state = False
 
     def __init__(self):
         # logging.basicConfig()
@@ -43,10 +60,67 @@ class WateringSystem(object):
         self.__humidity = Humidity(900)
         self.__sensor = (SoilSensor(1), SoilSensor(2), SoilSensor(3))
 
+        with session as sess:
+            self.__reservoir_size = sess.query(Settings).first().reservoir_size
+            self.__consumption = sess.query(Settings).first().consumption
+            self.__water_level = sess.query(Widget).first().current_water_level
+            self.__last_activation = sess.query(Widget).first().last_activation
+        self.__interval = 0
+
         self.__activationLevel = 0
         self.__state = 0
         self.__start_time = time.time()
         self.start()
+
+
+    def get_last_activation(self):
+        with session as sess:
+            self.__last_activation = sess.query(Widget).first().last_activation
+        return self.__last_activation
+
+
+    # def set_last_activation(self, last_activation):
+    #     Widget.query().filter_by(id=1).last_activation = last_activation
+
+
+    def set_consumption(self):
+        with session as sess:
+            self.__consumption = sess.query(Settings).first().consumption
+        return self.__last_activation
+
+    def set_water_level(self):
+        with session as sess:
+            self.__water_level = sess.query(Widget).first().current_water_level
+        return self.__water_level
+
+    def set_reservoir_size(self):
+        with session as sess:
+            self.__reservoir_size = sess.query(Settings).first().reservoir_size
+        return self.__reservoir_size
+
+    def set_last_activation(self):
+        with session as sess:
+            self.__last_activation = sess.query(Widget).first().last_activation
+        return self.__last_activation
+
+    def update_water_level(self):
+        with session as sess:
+            sess.query(Widget).first().current_water_level = self.__water_level - self.__consumption
+
+    def update_last_activation(self):
+        with session as sess:
+            sess.query(Widget).first().last_activation = self.__last_activation
+
+
+    def calculate_refill(self, activation_time):
+        interval = activation_time - self.__last_activation
+        max_pump_activations = math.floor(self.__reservoir_size / self.__consumption)
+        return interval * max_pump_activations
+
+    def estimate_interval(self,temperature=0):
+        pass
+        # TODO: implement estimation of the pump activation interval baed on the temperature
+
 
 
     def stop(self):
@@ -57,13 +131,18 @@ class WateringSystem(object):
         return self.__ws_status
 
     def set_activationLevel(self, value):
-        self.__activationLevel = value
+
+        # self.__activationLevel = value
+        with session as sess:
+            WateringSystem.activationLevel = sess.query(Widget).first().activation_level
 
     def get_activationLevel(self):
         return self.__activationLevel
 
     def set_state(self, value):
-        self.__activationLevel = value
+        # self.__activationLevel = value
+        with session as sess:
+            WateringSystem.state = sess.query(Widget).first().widget_state
 
     def get_state(self):
         return self.__activationLevel
@@ -145,24 +224,26 @@ class WateringSystem(object):
 
             humidity = [sensor.getHumidity() for sensor in self.__sensor]
 
-            print('humidity: {}'.format(humidity))
+            # print('humidity: {}'.format(humidity))
 
             # humidity = self.__sensor[0].getHumidity()
-            print("activationLevel: " + str(self.__activationLevel))
-            print("STOP: " + str(STOP))
+            # print("activationLevel: " + str(self.__activationLevel))
+            # print("STOP: " + str(STOP))
 
 
             self.log_humidity(humidity, 60)
 
 
-            print('humidity_in_percent: {}'.format(humidity[0].inPercent()))
+            # print('humidity_in_percent: {}'.format(humidity[0].inPercent()))
+
+
 
 
             # TODO: how to handle the startup scenario
-            # currently doesnt do anything because self.__activationLevel == 0 append
-            # self.__state == 0
-            if (humidity[0].inPercent() < self.__activationLevel) and (self.__state):
+            print('widget_state: {}\nactivation_level: {}'.format(WateringSystem.state, WateringSystem.activation_level))
+            if (humidity[0].inPercent() < WateringSystem.activation_level) and (WateringSystem.state):
                 counter+=1
+                self.calculate_refill(time.time())
                 print("Counter: " + str(counter))
                 print('Channel 1: {0}'.format(self.__sensor[0].getHumidity().getValue()))
                 print("Low humidity Level. Starting pump.")

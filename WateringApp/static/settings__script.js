@@ -6,12 +6,14 @@ $('document').ready(() =>
       locationValue = $('#input-location').val()
       reservoirSize = $('#input-reservoir').val()
       reservoirWarn = $('#input-reservoir-warn').val()
-      activationLevel = $('#input-activation-level').val()
+      // activationLevel = $('#input-activation-level').val()
+      consumption = $('#input-consumption').val()
 
       var data = {
         location: locationValue,
         reservoir_size: reservoirSize,
-        reservoir_warn_level: reservoirWarn
+        reservoir_warn_level: reservoirWarn,
+        consumption: consumption
         // activation_level: activationLevel
       }
 
@@ -23,9 +25,7 @@ $('document').ready(() =>
           type: 'POST',
           contentType:'application/json; charset=utf-8',
           url:'/updateUser',
-
           data: json_data,
-
           success: (result) =>
           {
             console.log(result)

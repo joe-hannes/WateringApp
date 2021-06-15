@@ -5,13 +5,19 @@ from flask_sqlalchemy import SQLAlchemy
 
 import time
 
-
-import sqlite3
-import threading
+# import threading
 
 from .extensions import db
 
-from .views import main, json, statistics, update_user, settings, get_temperature, pump, test, autoMode, createTables, widgetState, initialCode, badReq, assertionError, restartView, updateActivationLevelView, getActivationLevelView
+from .views import  json, get_temperature, test,  createTables, initialCode, badReq, assertionError
+
+from WateringApp.werkzeuge.WidgetWerkzeug import pump, main, widgetState, autoMode, updateActivationLevelView, getActivationLevelView
+
+from WateringApp.werkzeuge.SettingsWerkzeug import settings, restartView
+
+from WateringApp.werkzeuge.StatisticsWerkzeug import statistics
+
+from WateringApp.werkzeuge.UserWerkzeug import  update_user
 
 from .Models import User, Widget
 
