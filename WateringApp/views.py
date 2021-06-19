@@ -2,7 +2,6 @@
 from flask_user import login_required
 from flask import Flask, render_template, Blueprint
 
-from .WateringSystem import WateringSystem, STOP
 
 from .Models import Widget, Settings
 
@@ -12,11 +11,13 @@ from WateringApp.materialien.SoilSensor import SoilSensor
 
 import json as json2
 
-import requests
+
 import json
 
 
 from WateringApp.werkzeuge.shared import session
+
+import WateringApp.WateringSystem as wsys
 
 # import werkzeug
 
@@ -28,7 +29,7 @@ json = Blueprint('json', __name__)
 
 test = Blueprint('test', __name__)
 
-get_temperature = Blueprint('get_temperature', __name__)
+
 
 createTables = Blueprint('createTables', __name__)
 
@@ -48,14 +49,17 @@ assertionError = Blueprint('assertionError', __name__)
 
 
 
-# @initialCode.before_app_first_request
-# def activate_job():
-#     if Widget.query.first().widget_state:
-#         wsys = WateringSystem()
-#         daemon = threading.Thread(name='startSystem',
-#                                   target=startSystem, args=(wsys,))
-#         daemon.start()
-#         print("started wsys")
+@initialCode.before_app_first_request
+def activate_job():
+    """initialize the loop"""
+    wsys.wsys.start()
+
+    # if Widget.query.first().widget_state:
+    #     wsys = WateringSystem()
+    #     daemon = threading.Thread(name='startSystem',
+    #                               target=startSystem, args=(wsys,))
+    #     daemon.start()
+    #     print("started wsys")
     # def run_job():
     #     not_started = True
     #     while not_started:
@@ -120,27 +124,7 @@ def serveJSON():
 
 
 
-@get_temperature.route("/getTemperature", methods=['POST'])
-@login_required
-def get_temperature_ep():
 
-    with session as sess:
-        location = sess.query(Settings).first().location
-
-    base_url = 'http://api.openweathermap.org/data/2.5/weather'
-
-    api_key = 'aec85d0e0f52e5c5e509ff4142a3a822'
-    concat_url = base_url + '?q=' + location + '&appid=' + api_key
-    conversion_val = 273.15
-
-    print('concat_url: {}'.format(concat_url))
-
-    r = requests.get(concat_url)
-
-    print('response: {}'.format(r.text))
-    # temperature = r.main.temp - convertion_val
-
-    return str(r.json()['main']['temp'] - conversion_val)
 
 
 

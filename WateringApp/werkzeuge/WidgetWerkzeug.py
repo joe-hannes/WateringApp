@@ -2,14 +2,21 @@ from flask_user import login_required
 from flask import Flask, render_template, Blueprint, g, request
 
 
-
-from WateringApp.werkzeuge.shared import wsys, session
+from WateringApp.werkzeuge.shared import session
 from WateringApp.Models import Settings, Widget
 from WateringApp.materialien.SoilSensor import SoilSensor
 from WateringApp.materialien.Motor import Motor
 
 
+import WateringApp.WateringSystem as wsys
+
+
+
+# import WateringApp.tests.modulea_test as tests
+
+
 import time
+
 
 
 pump = Blueprint('pump', __name__)
@@ -19,36 +26,28 @@ main = Blueprint('main', __name__)
 updateActivationLevelView = Blueprint('updateActivationLevelView', __name__)
 getActivationLevelView = Blueprint('getActivationLevelView', __name__)
 
-
-
-
 @main.route("/")
 @login_required
 def index():
-
     # TODO: for now initialize last_activation and current_water_level when the page is opened
     # should be only initialized once when the program starts in the future
-    with session as sess:
-        sess.query(Widget).first().last_activation = time.time()
-        water_level = sess.query(Settings).first().reservoir_size
-        sess.query(Widget).first().current_water_level = water_level
-        sess.commit()
-        consumption = sess.query(Settings).first().consumption
-        state = sess.query(Widget).first().widget_state
 
     # values = SoilSensor().getHumidity(0)
+
+    print(f'activations: {wsys.wsys.query_activation(1, 2)}')
     values = SoilSensor(1).getHumidity()
     # print("values:" + str(values.getValue()))
     values = values.inPercent()
-    return render_template("index.html", data = state)
+    return render_template("index.html")
 
 @pump.route("/activatePump")
 @login_required
 def activatePump():
-    print('calculated time until refill: {} hours'.format(wsys.calculate_refill(time.time())/360))
+    # TODO: update water level
     motor = Motor()
     motor.continuous("right")
     motor.stop()
+
 
 
     return "Successfully started Motor"
@@ -72,7 +71,7 @@ def getWidgetState():
     with session as sess:
         db_entry = sess.query(Widget).first().widget_state
 
-    wsys.set_state(db_entry)
+    wsys.wsys.set_state(db_entry)
 
     return 'retrieved widget state: {}'.format(db_entry)
 
@@ -102,7 +101,7 @@ def toggleAutoMode():
             sess.commit()
             STOP = True
             # daemon.stop = False
-            wsys.set_state(False)
+            wsys.wsys.set_state(False)
 
         else:
 
@@ -111,7 +110,7 @@ def toggleAutoMode():
             # daemon.start()
             sess.query(Widget).first().widget_state = True
             sess.commit()
-            wsys.set_state(True)
+            wsys.wsys.set_state(True)
 
         result = str(sess.query(Widget).first().widget_state)
 
@@ -123,11 +122,11 @@ def toggleAutoMode():
 def updateActivationLevel():
     if request.method == "POST":
         activation_level = request.form['data']
-        print('activation_level: ' + str(activation_level))
+        # print('activation_level: ' + str(activation_level))
         with session as sess:
             sess.query(Widget).first().activation_level = request.form['data']
             sess.commit()
-        wsys.set_activationLevel(int(activation_level))
+        wsys.wsys.set_activation_level(int(activation_level))
     return 'updated Activation Level'
 
 @getActivationLevelView.route("/getActivationLevel", methods=['POST'])

@@ -4,7 +4,7 @@ import time
 
 class Motor(object):
     def __init__(self):
-        self.__enable = 4
+        self.__enablePin = 4
         self.__dirPin = 20
         self.__stepPin = 21
 
@@ -14,7 +14,7 @@ class Motor(object):
 
         GPIO.setup(self.__dirPin, GPIO.OUT)
         GPIO.setup(self.__stepPin, GPIO.OUT)
-        GPIO.setup(self.__enable,GPIO.OUT)
+        GPIO.setup(self.__enablePin,GPIO.OUT)
 
 
 
@@ -23,22 +23,25 @@ class Motor(object):
         delay =  0.0005
         start = time.time()
 
-        # while time.time() - start <= 30.0:
-        while True:
+        while time.time() - start <= 2.0:
+        # while True:
+            print("Motor started")
             for i in range(steps):
                 # print("step: " + str(i))
                 GPIO.output(self.__stepPin, GPIO.LOW)
                 time.sleep(delay)
                 GPIO.output(self.__stepPin, GPIO.HIGH)
                 time.sleep(delay)
-        # GPIO.output(self.__enable,GPIO.HIGH)
+        GPIO.output(self.__enablePin,GPIO.HIGH)
+
+
 
 
 
     def continuous(self,direction):
-        print("Motor started")
 
-        GPIO.output(self.__enable,GPIO.LOW)
+
+        GPIO.output(self.__enablePin,GPIO.LOW)
 
         if direction == "left":
             GPIO.output(self.__dirPin, GPIO.LOW)
@@ -56,4 +59,4 @@ class Motor(object):
 
     def stop(self):
         print("Motor stopped")
-        GPIO.output(self.__enable,GPIO.HIGH)
+        GPIO.output(self.__enablePin, GPIO.HIGH)

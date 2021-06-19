@@ -7,7 +7,7 @@ from .extensions import db, Base
 
 
 class Widget(Base):
-    __tablename__ = 'widget'
+    __tablename__ = 'Widget'
 
     id = Column(Integer, primary_key=True)
     widget_state = Column(Boolean)
@@ -16,12 +16,12 @@ class Widget(Base):
     last_activation = Column(Integer)
 
 
-    def __init__(self, description):
-        self.description = description
+    # def __init__(self, description, id, ):
+    #     self.description = description
 
 
 class Settings(Base):
-    __tablename__ = 'settings'
+    __tablename__ = 'Settings'
 
     id = Column(Integer, primary_key=True)
     location = Column(String(50), nullable=True, server_default='N/V')

@@ -1,5 +1,6 @@
 from flask import Flask, Blueprint
 
+
 from flask_user import UserManager
 from flask_sqlalchemy import SQLAlchemy
 
@@ -9,11 +10,11 @@ import time
 
 from .extensions import db
 
-from .views import  json, get_temperature, test,  createTables, initialCode, badReq, assertionError
+from .views import  json, test,  createTables, initialCode, badReq, assertionError
 
 from WateringApp.werkzeuge.WidgetWerkzeug import pump, main, widgetState, autoMode, updateActivationLevelView, getActivationLevelView
 
-from WateringApp.werkzeuge.SettingsWerkzeug import settings, restartView
+from WateringApp.werkzeuge.SettingsWerkzeug import settings, restartView, get_temperature
 
 from WateringApp.werkzeuge.StatisticsWerkzeug import statistics
 
@@ -21,9 +22,10 @@ from WateringApp.werkzeuge.UserWerkzeug import  update_user
 
 from .Models import User, Widget
 
-from .WateringSystem import WateringSystem
+
 
 from flask_fontawesome import FontAwesome
+
 
 # import requests
 
@@ -66,6 +68,7 @@ def createApp(config_file= 'config.py'):
 
     user_manager = UserManager(app, db, User)
 
+
     fa = FontAwesome(app)
 
     app.register_blueprint(main)
@@ -84,28 +87,14 @@ def createApp(config_file= 'config.py'):
     app.register_blueprint(restartView)
     app.register_blueprint(updateActivationLevelView)
     app.register_blueprint(getActivationLevelView)
+
     # app.register_blueprint(assertionError)
 
     db.init_app(app)
 
-    # start_runner()
+
 
 
     # app.run(threaded=True, host="0.0.0.0", port="8080")
 
     return app
-
-
-
-
-# if __name__ == "__main__":
-#     # Start the server in a new thread
-#
-#     daemon = threading.Thread(name='startServer',
-#                               target=startServer)
-#
-#     # Set as a daemon so it will be killed once the main thread is dead.
-#     daemon.setDaemon(True)
-#     daemon.start()
-#     print('lulz')
-    # do everything else

@@ -2,7 +2,9 @@ from flask import Flask, render_template, Blueprint, request
 from flask_user import login_required
 
 from WateringApp.werkzeuge.shared import session
-from WateringApp.Models import Settings
+from WateringApp.Models import Settings, Widget
+
+import WateringApp.WateringSystem as wsys
 
 
 update_user = Blueprint('update_user', __name__)
@@ -19,6 +21,9 @@ def update_user_ep():
             # TODO: handle case where we want to add an entry if no entry is already there
             with session as sess:
                 sess.query(Settings).filter_by(id=1).update(data)
+                # TODO: only update reservoir size
+                sess.query(Widget).first().current_water_level = data['reservoir_size']
+                wsys.wsys.update_consumption(data['consumption'])
                 sess.commit()
             # Settings.query.first().reservoir_size = data['reservoirSize']
             # db.session.commit()
