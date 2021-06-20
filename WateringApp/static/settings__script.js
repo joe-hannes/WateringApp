@@ -48,4 +48,47 @@ $('document').ready(() =>
   });
 
 
-})
+  $('#settings-item').on('click', () =>
+  {
+      window.location = '/settings'
+  });
+
+  $('#user-item').on('click', () =>
+  {
+      window.location = '/user'
+  });
+
+
+
+
+
+
+
+  $('#widget-item').on('click', () =>
+  {
+    window.location = '/'
+  });
+
+  // $('#range-div').css({'display': 'flex', 'justify-content':'center'})
+
+
+
+
+  $('body').on('input', '#activation-input', () =>
+  {
+    $('#range-value').text('\xa0' + $('#activation-input').val() + " %");
+  });
+
+  $('body').on('mouseup', '#activation-input', () =>
+  {
+    console.log("mouseupevent");
+    updateActivationLevel()
+  });
+
+  $('#restart-item').on('click', () =>
+  {
+    restart();
+  });
+
+
+});

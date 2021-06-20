@@ -1,6 +1,11 @@
 
+
+
+
 $(document).ready(() =>
 {
+
+
 
   getActivationLevel();
   ajaxRequest();
@@ -44,6 +49,8 @@ $(document).ready(() =>
 
 
 }});
+
+}
 
 //  CSS Styling
 
@@ -121,14 +128,26 @@ $('#statistics-item').on('click', () =>
 
 $('#settings-item').on('click', () =>
 {
-
-  {
     window.location = '/settings'
-  }
+});
 
+$('#user-item').on('click', () =>
+{
+    window.location = '/user'
 });
 
 
+
+
+
+
+
+$('#widget-item').on('click', () =>
+{
+  window.location = '/'
+});
+
+// $('#range-div').css({'display': 'flex', 'justify-content':'center'})
 
 
 
@@ -149,13 +168,6 @@ $('#restart-item').on('click', () =>
   restart();
 });
 
-$('#widget-item').on('click', () =>
-{
-  window.location = '/'
-});
-
-// $('#range-div').css({'display': 'flex', 'justify-content':'center'})
-}
 
 function updateActivationLevel()
 {

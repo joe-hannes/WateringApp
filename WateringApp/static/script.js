@@ -16,9 +16,11 @@ function ajaxRequest()
 {
   // console.log('result: ' + result);
   var obj = JSON.parse(result);
-  // console.log(obj);
-  $('#value-text').html(obj["results"]["channel"][1].percentString)
-  animateProgressBar(obj["results"]["channel"][1].percent)
+  console.log(obj);
+  $('#value-text').html(obj["results"]["channel"][1].percentString);
+  console.log('water_level: ' + obj["results"]["water_level"]);
+  $('.ocean').css('height', obj["results"]["water_level"] + 'vh');
+  animateProgressBar(obj["results"]["channel"][1].percent);
 }});
 }
 
@@ -109,9 +111,10 @@ function animateProgressBar(data)
 $('#drop-circle').on('click', () =>
 {
   activatePump();
-  console.log('path_mask');
-  $( "div.success" ).fadeIn( 300 ).delay( 1500 ).fadeOut( 400 );
+  $( "div#pump-message" ).fadeIn( 300 ).delay( 1500 ).fadeOut( 400 );
 });
+
+
 
 $('#cog-circle').on('click', () =>
 {
@@ -149,6 +152,7 @@ $('#cog-circle').on('click', () =>
 $('#pause-circle').on('click', () =>
 {
   toggleWidgetState();
+  $("div#wsys-message").fadeIn( 300 ).delay( 1500 ).fadeOut( 400 );
   // $('#play-btn').css('visibility', 'visible');
   // $('#pause-btn').css('visibility', 'hidden');
   $('#active-icon').css('visibility', 'hidden');
@@ -162,6 +166,7 @@ $('#pause-circle').on('click', () =>
 $('#play-circle').on('click', () =>
 {
   toggleWidgetState();
+  $( "div#wsys-message" ).fadeIn( 300 ).delay( 1500 ).fadeOut( 400 );
   // $('#play-btn').css('visibility', 'hidden');
   // $('#pause-btn').css('visibility', 'visible');
   $('#active-text').css('visibility', 'visible');

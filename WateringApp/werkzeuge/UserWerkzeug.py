@@ -8,6 +8,14 @@ import WateringApp.WateringSystem as wsys
 
 
 update_user = Blueprint('update_user', __name__)
+user_view = Blueprint('user_view', __name__)
+
+
+
+@user_view.route("/user")
+@login_required
+def user():
+    return render_template('user.html')
 
 @update_user.route("/updateUser", methods=['POST'])
 @login_required

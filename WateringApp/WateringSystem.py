@@ -85,7 +85,7 @@ class WateringSystem(object):
         self.__last_activation = 0
 
         self.__activation_level = 0
-        self.__widget_state = 0
+        self.__widget_state = False
         self.__start_time = time.time()
 
         self.__temp_map = []

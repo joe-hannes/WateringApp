@@ -18,7 +18,7 @@ from WateringApp.werkzeuge.SettingsWerkzeug import settings, restartView, get_te
 
 from WateringApp.werkzeuge.StatisticsWerkzeug import statistics
 
-from WateringApp.werkzeuge.UserWerkzeug import  update_user
+from WateringApp.werkzeuge.UserWerkzeug import  user_view, update_user
 
 from .Models import User, Widget
 
@@ -77,6 +77,7 @@ def createApp(config_file= 'config.py'):
     app.register_blueprint(test)
     app.register_blueprint(statistics)
     app.register_blueprint(settings)
+    app.register_blueprint(user_view)
     app.register_blueprint(get_temperature)
     app.register_blueprint(update_user)
     app.register_blueprint(autoMode)

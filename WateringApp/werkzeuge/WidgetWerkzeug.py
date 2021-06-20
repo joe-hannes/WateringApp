@@ -73,7 +73,7 @@ def getWidgetState():
 
     wsys.wsys.set_state(db_entry)
 
-    return 'retrieved widget state: {}'.format(db_entry)
+    return str(db_entry)
 
 
 @autoMode.route("/toggleAutoMode")

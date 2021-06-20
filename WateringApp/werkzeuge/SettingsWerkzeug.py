@@ -9,6 +9,8 @@ from WateringApp.werkzeuge.shared import session
 from WateringApp.Models import Settings
 
 
+
+
 from WateringApp.linear_regression import beta_one, regress
 
 settings = Blueprint('settings', __name__)
@@ -64,13 +66,22 @@ def get_temperature_ep():
     client = InfluxDBClient(host='localhost', port=8086)
     client.switch_database('humidity')
 
-    activations = client.query('SELECT "count" FROM (select count("value"), time from "activation" GROUP BY time(1w)) WHERE "count" > 0 ')
-    temperature = client.query('SELECT mean("value") FROM temperature GROUP BY time(1w)')
+    activations_result = client.query('SELECT "count" FROM (select count("value"), time from "activation" GROUP BY time(1w)) WHERE "count" > 0')
+    temperature_result = client.query('SELECT mean("value") FROM temperature GROUP BY time(1w)')
 
-    reg_params = beta_one(temperature, activations)
+    activations = [act['count'] for act in list(activations_result.get_points())]
+    temperature =   [temp['mean'] for temp in list(temperature_result.get_points())]
+    print(activations)
+
+    # reg_params = beta_one(temperature, activations)
 
 
-    est_activations = regress(reg_params)
+    demo_temp = [10,11,12,13,14,15,16,17,18,19]
+    demo_act = [20,21,22,23,24,25,26,27,28,29]
+    reg_params = beta_one(demo_temp, demo_act)
+
+
+    est_activations = regress(30, reg_params)
 
 
 
@@ -94,4 +105,4 @@ def get_temperature_ep():
     # was_successfull = client.write_points(json_body)
 
 
-    return est_activations
+    return str(est_activations)

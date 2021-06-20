@@ -15,9 +15,16 @@ import json as json2
 import json
 
 
-from WateringApp.werkzeuge.shared import session
-
 import WateringApp.WateringSystem as wsys
+
+from WateringApp.config import SQLALCHEMY_DATABASE_URI
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
+
+
+engine = create_engine(SQLALCHEMY_DATABASE_URI)
+session = Session(engine)
 
 # import werkzeug
 
@@ -53,6 +60,8 @@ assertionError = Blueprint('assertionError', __name__)
 def activate_job():
     """initialize the loop"""
     wsys.wsys.start()
+    with session as sess:
+        sess.query(Widget).first().widget_state = False
 
     # if Widget.query.first().widget_state:
     #     wsys = WateringSystem()
@@ -89,14 +98,22 @@ def serveJSON():
     activeAmount = 0
     results = {}
     channel = {}
+
+    with session as sess:
+        water_level = sess.query(Widget).first().current_water_level
+
+
+
     for i in range(SoilSensor.AMOUNT + 1):
         sensor = SoilSensor(i)
         humidity = sensor.getHumidity()
         json = humidity.toJSONString()
+
         if humidity.getValue() > 100:
             average += humidity.getValue()
             activeAmount += 1
             json["active"] = 1
+
         else:
             json["active"] = 0
             json["value"] = "-"
@@ -110,6 +127,9 @@ def serveJSON():
     avg_humidity = Humidity.intToHumidity(average)
     channel["channel"] = valArray
     results["results"] = channel
+
+    # TODO:  do this calculation in fachwerte and make reservoir size (500) dynamic
+    results['results']['water_level'] =  water_level *  (60/500)
     channel["average"] = avg_humidity.toJSONString()
 
     # print(results)
