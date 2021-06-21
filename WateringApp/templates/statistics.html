@@ -1,3 +1,5 @@
+{% import 'macros.html' as macros %}
+
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
@@ -6,32 +8,8 @@
   </head>
   <body style="background: black;">
 
+{{ macros.appBar() }}
 
-
-   <!-- Sidebar -->
-    <div class="bg-light border-right" id="sidebar-wrapper">
-      <div class="list-group list-group-flush">
-       <div id='app-bar' class="list-group-item list-group-item-action bg-light "> <span class='fas fa-bars'></span>  <a id='menu' > WateringApp </a>
-         </div>
-        <a id='restart-item' class="list-group-item list-group-item-action bg-light">Restart</a>
-
-        <a id='user-item' class="list-group-item list-group-item-action bg-light">User Management</a>
-
-        <a id='statistics-item' class="list-group-item list-group-item-action bg-light">Statistics</a>
-
-        <a id='widget-item' class="list-group-item list-group-item-action bg-light">Widget</a>
-
-        <div id='activation-level-item'>
-        <div id='range-div' class="list-group-item list-group-item-action bg-light">
-          <div id='pump-activation-label' style='float:left;'>Pump Activation </div>
-          <div id='range-value'></div>
-          <input id="activation-input" type="range" min ='0' max='100'></input>
-        </div>
-        </div>
-
-      </div>
-    </div>
-    <!-- /#sidebar-wrapper -->
 
    <iframe
      src="http://192.168.178.41:3000/d/ASS9f7Rgz/watering-system-dashboard?orgId=1&from=now-30m&to=now&kiosk"

@@ -11,7 +11,7 @@ class Widget(Base):
 
     id = Column(Integer, primary_key=True)
     widget_state = Column(Boolean)
-    activation_level = Column(Integer)
+
     current_water_level = Column(Integer)
     last_activation = Column(Integer)
 
@@ -28,6 +28,7 @@ class Settings(Base):
     reservoir_size = Column(Integer, nullable=True, server_default='-1')
     consumption = Column(Integer, nullable=True, server_default='N/V')
     reservoir_warn_level = Column(Integer, nullable=True, server_default='-1')
+    activation_level = Column(Integer)
 
 
     def __init__(self, description):

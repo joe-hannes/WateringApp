@@ -8,6 +8,8 @@ from influxdb import InfluxDBClient
 from WateringApp.werkzeuge.shared import session
 from WateringApp.Models import Settings
 
+from WateringApp.forms.settings_form import SettingsForm
+
 
 
 
@@ -22,8 +24,13 @@ get_temperature = Blueprint('get_temperature', __name__)
 @settings.route("/settings")
 @login_required
 def settings_page():
-    # settings = User.query.filter_by('username')
-    return render_template("settings.html", data = settings)
+
+    with session as sess:
+        settings = sess.query(Settings).first()
+        print('settings: {}'.format(settings))
+    form = SettingsForm()
+    # return render_template("settings.html", )
+    return render_template("settings.html", form = form, result = settings)
 
 
 @restartView.route("/restart")

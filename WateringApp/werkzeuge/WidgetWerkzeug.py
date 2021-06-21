@@ -124,7 +124,7 @@ def updateActivationLevel():
         activation_level = request.form['data']
         # print('activation_level: ' + str(activation_level))
         with session as sess:
-            sess.query(Widget).first().activation_level = request.form['data']
+            sess.query(Settings).first().activation_level = request.form['data']
             sess.commit()
         wsys.wsys.set_activation_level(int(activation_level))
     return 'updated Activation Level'

@@ -1,57 +1,58 @@
+{% import 'macros.html' as macros %}
+
 {% extends 'flask_user/_public_base.html' %}
 
 {% block content %}
 
 
-<div class="bg-light border-right" id="sidebar-wrapper">
-  <div class="list-group list-group-flush">
-   <div id='app-bar' class="list-group-item list-group-item-action bg-light "> <span class='fas fa-bars'></span>  <a id='menu' > WateringApp </a>
-     </div>
-    <a id='restart-item' class="list-group-item list-group-item-action bg-light">Restart</a>
+{{ macros.appBar() }}
 
-    <a id='user-item' class="list-group-item list-group-item-action bg-light">User Management</a>
+<form action="" method="post" novalidate>
+{{ form.hidden_tag() }}
+<p>
+{{ form.reservoir_size.label }}<br>
+{{ form.reservoir_size(value=result['reservoir_size']) }}<br>
+{{ form.consumption.label }}<br>
+{{ form.consumption(value=result['consumption']) }}<br>
+{{ form.water_level_warn.label }}<br>
+{{ form.water_level_warn(value=result['reservoir_warn_level']) }}<br>
+</p>
 
-    <a id='statistics-item' class="list-group-item list-group-item-action bg-light">Statistics</a>
-    <a id='settings-item' class="list-group-item list-group-item-action bg-light">Settings</a>
+<p>
+{{ form.location.label }}<br>
+{{ form.location(value=result['location']) }}<br>
+</p>
 
-    <a id='widget-item' class="list-group-item list-group-item-action bg-light">Widget</a>
+{{form.submit}}
+</form>
 
-    <div id='activation-level-item'>
-    <div id='range-div' class="list-group-item list-group-item-action bg-light">
-      <div id='pump-activation-label' style='float:left;'>Pump Activation </div>
-      <div id='range-value'></div>
-      <input id="activation-input" type="range" min ='0' max='100'></input>
-    </div>
-    </div>
-
-  </div>
-</div>
-
-<label for="input-reservoir">Set the size of the reservoir in ml</label>
-<input id='input-reservoir' type='text'></<input>
+<!-- <label for="input-reservoir">Set the size of the reservoir in ml</label>
+<input id='input-reservoir' value=" {{result['reservoir_size'] }}" type='text'></<input>
 
 
 <label for="input-consumption">Consumtion rate in ml</label>
-<input id='input-consumption' type='text'></<input>
+<input id='input-consumption'  value=" {{result['consumption'] }}" type='text'></<input>
 <br>
 <label for='input-location'>Location</label>
-<input type="text" id ="input-location"></input>
+<input type="text"  value=" {{result['location'] }}" id ="input-location"></input>
 
 <label for="input-reservoir-warn">Notify when reservoir water level is below:</label>
-<input id='input-reservoir-warn' type='text'></<input>
+<input id='input-reservoir-warn' value=" {{result['reservoir_warn_level']}}" default='result' type='text'></<input>
 
 <label for='activation-level'>Activation Level</label>
-<input id='input-activation-level' min='0' max='100' type='range'></input>
+<input id='input-activation-level' value="{{result['activation_level']}}"" default='result' min='0' max='100' type='range'></input>
 
 <p>temperature: </p> <p id='temp'></p>
 <p>estimated refill time: </p> <p id='refill-time'></p>
 <button id='temperature-submit' type="submit" name="button">Temperatur</button>
 
 
-<button id='settings-submit' type="submit" name="button">Save Settings</button>
+<button id='settings-submit' type="submit" name="button">Save Settings</button> -->
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-sidebar/3.3.2/jquery.sidebar.min.js"></script>
+<script type=text/javascript src="{{url_for('static', filename='appbar.js') }}"></script>
 <script type=text/javascript src="{{url_for('static', filename='settings__script.js') }}"></script>
+
 
 {% endblock %}
