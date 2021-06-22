@@ -4,12 +4,13 @@
 
 {% block extra_css %}
      {{ fontawesome_html() }}
+      <link href="{{url_for('static', filename='test__style.css')}}" rel="stylesheet" type="text/css">
 {% endblock %}
 
 
 {% block header %}
 
- {{ macros.appBar() }}
+ {{ macros.appBar(menu_items, view_name) }}
 
  {% endblock %}
 
@@ -19,9 +20,11 @@
 
   <div class="value-div"></div>
   <div class="avg-div"></div>
+
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-sidebar/3.3.2/jquery.sidebar.min.js"></script>
-  <script type=text/javascript src="{{url_for('static', filename='scriptTest.js') }}"></script>
+  <script type=text/javascript src="{{url_for('static', filename='test__script.js') }}"></script>
+    <script type=text/javascript src="{{url_for('static', filename='appbar.js') }}"></script>
 
 
 {% endblock %}

@@ -130,26 +130,7 @@ class WateringSystem(object):
     def update_consumption(self, value):
         with session as sess:
             self.__consumption = value
-    #
-    # def set_reservoir_size(self):
-    #     with session as sess:
-    #         self.__reservoir_size = sess.query(Settings).first().reservoir_size
-    #     return self.__reservoir_size
-    #
-    # def set_last_activation(self):
-    #     with session as sess:
-    #         self.__last_activation = sess.query(Widget).first().last_activation
-    #     return self.__last_activation
-    #
-    # def update_water_level(self):
-    #     with session as sess:
-    #         sess.query(Widget).first().current_water_level = self.__water_level - self.__consumption
-    #
-    # def update_last_activation(self):
-    #     with session as sess:
-    #         sess.query(Widget).first().last_activation = self.__last_activation
-    #
-    #
+
     def calculate_refill(self, activation_time):
         interval = activation_time - self.__last_activation
         print(f'intervall: {interval}')
@@ -364,7 +345,7 @@ class WateringSystem(object):
 
 
 
-            if (humidity[0].inPercent() < self.__widget_state) and (self.__activation_level):
+            if (humidity[0].inPercent() < self.__activation_level) and (self.__widget_state):
                 counter+=1
                 print('refill_time: {} sekunden'.format(self.calculate_refill(time.time())))
 

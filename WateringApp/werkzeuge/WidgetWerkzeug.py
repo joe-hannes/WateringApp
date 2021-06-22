@@ -47,6 +47,8 @@ def activatePump():
     motor = Motor()
     motor.continuous("right")
     motor.stop()
+    with session as sess:
+        wsys.wsys.update_water_level(self, sess)
 
 
 
@@ -104,10 +106,6 @@ def toggleAutoMode():
             wsys.wsys.set_state(False)
 
         else:
-
-            # Set as a daemon so it will be killed once the main thread is dead.
-            # daemon.setDaemon(True)
-            # daemon.start()
             sess.query(Widget).first().widget_state = True
             sess.commit()
             wsys.wsys.set_state(True)
@@ -134,7 +132,7 @@ def updateActivationLevel():
 def getActivationLevel():
     if request.method == "POST":
         with session as sess:
-            value = sess.query(Widget).first().activation_level
+            value = sess.query(Settings).first().activation_level
 
 
 

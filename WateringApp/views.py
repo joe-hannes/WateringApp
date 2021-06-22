@@ -22,6 +22,9 @@ from WateringApp.config import SQLALCHEMY_DATABASE_URI
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
+from WateringApp.werkzeuge.shared import menu_items
+
+
 
 engine = create_engine(SQLALCHEMY_DATABASE_URI)
 session = Session(engine)
@@ -62,6 +65,9 @@ def activate_job():
     wsys.wsys.start()
     with session as sess:
         sess.query(Widget).first().widget_state = False
+
+
+    # TODO: initialize wsys object
 
     # if Widget.query.first().widget_state:
     #     wsys = WateringSystem()
@@ -142,20 +148,12 @@ def serveJSON():
 
 
 
-
-
-
-
-
-
-
-
-
-
 @test.route('/test')
 @login_required
 def testSite():
-    return render_template("test.html" )
+
+    # menu_items.append()
+    return render_template("test.html", menu_items = menu_items, view_name='Test')
 
 
 @createTables.route('/create')

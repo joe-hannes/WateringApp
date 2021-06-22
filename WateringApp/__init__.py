@@ -14,7 +14,7 @@ from .views import  json, test,  createTables, initialCode, badReq, assertionErr
 
 from WateringApp.werkzeuge.WidgetWerkzeug import pump, main, widgetState, autoMode, updateActivationLevelView, getActivationLevelView
 
-from WateringApp.werkzeuge.SettingsWerkzeug import settings, restartView, get_temperature
+from WateringApp.werkzeuge.SettingsWerkzeug import settings, restartView, calculate_refill, reset_water_level
 
 from WateringApp.werkzeuge.StatisticsWerkzeug import statistics
 
@@ -78,7 +78,6 @@ def createApp(config_file= 'config.py'):
     app.register_blueprint(statistics)
     app.register_blueprint(settings)
     app.register_blueprint(user_view)
-    app.register_blueprint(get_temperature)
     app.register_blueprint(update_user)
     app.register_blueprint(autoMode)
     app.register_blueprint(createTables)
@@ -88,6 +87,8 @@ def createApp(config_file= 'config.py'):
     app.register_blueprint(restartView)
     app.register_blueprint(updateActivationLevelView)
     app.register_blueprint(getActivationLevelView)
+    app.register_blueprint(calculate_refill)
+    app.register_blueprint(reset_water_level)
 
     # app.register_blueprint(assertionError)
 

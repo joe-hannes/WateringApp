@@ -1,25 +1,24 @@
-{% macro appBar() -%}
+{% macro appBar(menu_items, view_name) -%}
+
+
 <div class="bg-light border-right" id="sidebar-wrapper">
   <div class="list-group list-group-flush">
-   <div id='app-bar' class="list-group-item list-group-item-action bg-light "> <span class='fas fa-bars'></span>  <a id='menu' > WateringApp </a>
-     </div>
-    <a id='restart-item' class="list-group-item list-group-item-action bg-light">Restart</a>
+   <div id='app-bar' class="list-group-item list-group-item-action bg-light ">
 
-    <a id='user-item' class="list-group-item list-group-item-action bg-light">User Management</a>
+     <span class='fas fa-bars'></span>
+     <span id='menu'>{{ view_name }}</span>
 
-    <a id='statistics-item' class="list-group-item list-group-item-action bg-light">Statistics</a>
-    <a id='settings-item' class="list-group-item list-group-item-action bg-light">Settings</a>
 
-    <a id='widget-item' class="list-group-item list-group-item-action bg-light">Widget</a>
-
-    <div id='activation-level-item'>
-    <div id='range-div' class="list-group-item list-group-item-action bg-light">
-      <div id='pump-activation-label' style='float:left;'>Pump Activation </div>
-      <div id='range-value'></div>
-      <input id="activation-input" type="range" min ='0' max='100'></input>
     </div>
+
+    <div id ='menu-items'>
+     {% for item in menu_items %}
+        <a href='{{ item.href }}' class="list-group-item list-group-item-action bg-light">{{ item.text }}</a>
+    {% endfor %}
     </div>
 
   </div>
 </div>
+
+
 {%- endmacro %}
