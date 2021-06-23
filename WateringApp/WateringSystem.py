@@ -21,6 +21,8 @@ from .extensions import db
 
 from WateringApp.config import SQLALCHEMY_DATABASE_URI
 
+from WateringApp.config import API_KEY
+
 from sqlalchemy import create_engine
 # from sqlalchemy.orm import Session
 
@@ -111,6 +113,8 @@ class WateringSystem(object):
 
     def update_last_activation(self, sess):
         self.__last_activation = time.time()
+        print('activation_time: {}'.format(self.__last_activation))
+        # TODO: someting doesnt work here
         if sess.query(Widget).first() == None:
             widget = Widget(last_activation = self.__last_activation)
             sess.add(widget)
@@ -151,6 +155,9 @@ class WateringSystem(object):
     def get_status(self):
         return self.__ws_status
 
+    def set_water_level(self, value):
+        self.__water_level = value
+
     def set_activation_level(self, value):
         print(f'activation_level set: {value}')
         self.__activation_level = value
@@ -174,6 +181,9 @@ class WateringSystem(object):
     def get_state(self):
         return self.__widget_state
 
+    def get_water_level(self):
+        return self.__water_level
+
     def log_activation(self):
         client = InfluxDBClient(host='localhost', port=8086)
         client.switch_database('humidity')
@@ -191,6 +201,8 @@ class WateringSystem(object):
         return was_successfull
 
     def log_temperature(self, sess):
+
+        # TODO: catch exception
         location = sess.query(Settings).first().location
 
         base_url = 'http://api.openweathermap.org/data/2.5/'
@@ -198,17 +210,14 @@ class WateringSystem(object):
         type = ['weather', 'history']
 
 
-
-
-        api_key = 'aec85d0e0f52e5c5e509ff4142a3a822'
-        concat_url = base_url + type[0] + '?q=' + location + '&appid=' + api_key
+        concat_url = base_url + type[0] + '?q=' + location + '&appid=' + API_KEY
         conversion_val = 273.15
-
-        print('concat_url: {}'.format(concat_url))
+        #
+        # print('concat_url: {}'.format(concat_url))
 
         r = requests.get(concat_url)
 
-        print('response: {}'.format(r.text))
+        # print('response: {}'.format(r.text))
         # temperature = r.main.temp - convertion_val
 
         temp = r.json()['main']['temp'] - conversion_val
@@ -229,16 +238,7 @@ class WateringSystem(object):
 
         was_successfull = client.write_points(json_body)
 
-    def query_activation(self, start, end):
-        client = InfluxDBClient(host='localhost', port=8086)
-        client.switch_database('humidity')
-        # response = client.query('SELECT "value" FROM "activation" WHERE "value" > 0 ')
-        # response = client.query('SELECT count("value") FROM "activation" GROUP BY time(1w) ')
-        response = client.query('SELECT "count" FROM (select count("value"), time from "activation" GROUP BY time(1s)) WHERE "count" > 0 ')
-
-
-
-        return response
+        return was_successfull
 
 
 
@@ -341,13 +341,16 @@ class WateringSystem(object):
 
 
             # TODO: how to handle the startup scenario
-            print('widget_state: {}\nactivation_level: {} from {}'.format(self.__widget_state, self.__activation_level, self))
+            print('widget_state: {}\nactivation_level: {}\nwaterlevel({}) - consumption({}) = {}\nfrom {}'.format(self.__widget_state, self.__activation_level, self.__water_level, self.__consumption, self.__water_level - self.__consumption, self))
 
 
 
-            if (humidity[0].inPercent() < self.__activation_level) and (self.__widget_state):
+            if (self.__activation_level > humidity[0].inPercent()) and \
+                self.__water_level - self.__consumption >= 0 and \
+                self.__widget_state:
+
                 counter+=1
-                print('refill_time: {} sekunden'.format(self.calculate_refill(time.time())))
+                # print('refill_time: {} sekunden'.format(self.calculate_refill(time.time())))
 
                 with session2 as sess:
                     print('updating water_level')
@@ -356,8 +359,6 @@ class WateringSystem(object):
                     self.log_activation()
                     self.update_last_activation(sess)
 
-                print("Counter: " + str(counter))
-                print('Channel 1: {0}'.format(self.__sensor[0].getHumidity().getValue()))
                 print("Low humidity Level. Starting pump.")
                 self.__ws_status = 1
                 self.decodeStatus()
@@ -375,38 +376,18 @@ class WateringSystem(object):
                 # wait a bit to not constantly check for changes
                 time.sleep(30)
 
-            if counter == 10:
+            if counter == 5:
                 print(self.__errorMsg)
                 self.__ws_status = -1
                 self.decodeStatus()
                 self.__motor.stop()
                 break
 
-            # if STOP :
-            #     print(self.__errorMsg)
-            #     self.__ws_status = -1
-            #     self.decodeStatus()
-            #     self.__motor.stop()
-            #     break
-
-            # if getattr(daemon,"stop", True) :
-            #     print(self.__errorMsg)
-            #     self.__ws_status = -1
-            #     self.decodeStatus()
-            #     self.__motor.stop()
-            #     break
 
     def start(self):
-        # t1 = threading.Thread(target = self.startSystem)
         t1 = self.__executor.submit(self.startSystem)
         # t1.result()
 
-
-
-        # print('starting system in new thread')
-        # daemon = threading.Thread(name='startSystem',
-        #                           target=self.startSystem, args=(self.__activationLevel, self.__state))
-        # daemon.start()
 
 
 

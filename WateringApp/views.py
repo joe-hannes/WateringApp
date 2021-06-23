@@ -9,7 +9,7 @@ from  WateringApp.Fachwerte.Humidity import Humidity
 
 from WateringApp.materialien.SoilSensor import SoilSensor
 
-import json as json2
+
 
 
 import json
@@ -65,6 +65,14 @@ def activate_job():
     wsys.wsys.start()
     with session as sess:
         sess.query(Widget).first().widget_state = False
+        water_level = sess.query(Widget).first().current_water_level
+        activation_level = sess.query(Settings).first().activation_level
+
+        sess.commit()
+    wsys.wsys.set_state(False)
+
+    wsys.wsys.set_activation_level(activation_level)
+    wsys.wsys.set_water_level(water_level)
 
 
     # TODO: initialize wsys object
@@ -97,53 +105,7 @@ def activate_job():
 
 
 
-@json.route("/json")
-def serveJSON():
-    valArray = []
-    average = 0
-    activeAmount = 0
-    results = {}
-    channel = {}
 
-    with session as sess:
-        water_level = sess.query(Widget).first().current_water_level
-
-
-
-    for i in range(SoilSensor.AMOUNT + 1):
-        sensor = SoilSensor(i)
-        humidity = sensor.getHumidity()
-        json = humidity.toJSONString()
-
-        if humidity.getValue() > 100:
-            average += humidity.getValue()
-            activeAmount += 1
-            json["active"] = 1
-
-        else:
-            json["active"] = 0
-            json["value"] = "-"
-            json["percent"] = "-"
-            json["percentString"] = "-"
-        json["channel"] = i
-        valArray.append(json)
-
-    # print('activeAmount: ' + str(activeAmount))
-    average = round(average / activeAmount)
-    avg_humidity = Humidity.intToHumidity(average)
-    channel["channel"] = valArray
-    results["results"] = channel
-
-    # TODO:  do this calculation in fachwerte and make reservoir size (500) dynamic
-    results['results']['water_level'] =  water_level *  (60/500)
-    channel["average"] = avg_humidity.toJSONString()
-
-    # print(results)
-    # valArray.append("\"average\" :" + "\"" + str(average) + "\"")
-
-    # print(valArray)
-    return json2.dumps(results)
-        # return values
 
 
 

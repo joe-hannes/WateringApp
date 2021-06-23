@@ -9,39 +9,64 @@
 
 
 
+
+
  {% block body %}
 
  {{ macros.appBar(menu_items, view_name) }}
 
 
+ <!-- messages for button presses -->
+ <div id ='refill-message' class="alert-box success">
+   <!-- <div class="alert" role="alert"> -->
+       Reset Water Level
+       <span aria-hidden="true">&times;</span>
+     <!-- </div> -->
+ </div>
+
+
+ <p>Refill Time {{ refill_time }} days</p>
+
+
 <form action="/settings" method="post" novalidate>
 {{ form.hidden_tag() }}
-<p>
+
+
+<h3>Widget Settings</h3>
+<hr>
+
+<div>
 {{ form.reservoir_size.label }}<br>
-{{ form.reservoir_size(value=settings['reservoir_size']) }}<br>
+{{ form.reservoir_size(value=settings['reservoir_size']) }} ml<br>
+<a id='reset-water-level' >Reset Water Level</a>
+</div>
 {{ form.consumption.label }}<br>
-{{ form.consumption(value=settings['consumption']) }}<br>
-{{ form.reservoir_warn_level.label }}<br>
-{{ form.reservoir_warn_level(value=settings['reservoir_warn_level']) }}<br>
+{{ form.consumption(value=settings['consumption']) }} ml<br>
+{{ form.reservoir_warn_level.label }} <br>
+{{ form.reservoir_warn_level(value=settings['reservoir_warn_level']) }} %<br>
 
-{{ form.activation_level.label }}<br>
-{{ form.activation_level(value=settings['reservoir_warn_level']) }}<br>
-</p>
+{{ form.activation_level.label }}  {{ activation_level }} %<br>
+{{ form.activation_level(value=settings['activation_level']) }}<br>
 
+
+<hr>
+
+<h3>Prediction Settings</h3>
+<hr>
 <p>
 {{ form.location.label }}<br>
 {{ form.location(value=settings['location']) }}<br>
+
+{{ form.api_key.label }}<br>
+{{ form.api_key(value=settings['api_key']) }}
 </p>
-{{  form.submit  }}
+
+{{ form.submit }}
 
 </form>
 
 <form action="/reset_water_level" method='POST' novalidate>
 {{form.reset_water_level}}
-</form>
-
-<form action="/calculate_refill" method='POST' novalidate>
-{{form.calculate_refill}}
 </form>
 
 

@@ -2,6 +2,7 @@ from flask import Flask, render_template, Blueprint
 from flask_user import login_required
 import os
 import requests
+from requests.exceptions import ConnectionError
 import time
 
 from influxdb import InfluxDBClient
@@ -20,12 +21,75 @@ import WateringApp.WateringSystem as wsys
 
 from WateringApp.config import API_KEY
 
+import math
+
 settings = Blueprint('settings', __name__)
 restartView = Blueprint('restartView', __name__)
 reset_water_level = Blueprint('reset_water_level', __name__)
 
 
-calculate_refill = Blueprint('calculate_refill', __name__)
+def calculate_refill():
+
+    with session as sess:
+        consumption = sess.query(Settings).first().consumption
+        current_water_level = sess.query(Widget).first().current_water_level
+
+    max_pump_activations = math.floor(current_water_level / consumption)
+
+
+    try:
+
+        client = InfluxDBClient(host='localhost', port=8086)
+        client.switch_database('humidity')
+
+        with session as sess:
+            location = sess.query(Settings).first().location
+
+        interval = 14
+
+        activations_result = client.query('SELECT "count" FROM (select count("value"), time from "activation" GROUP BY time({}d)) WHERE "count" > 0'.format(interval))
+        temperature_result = client.query('SELECT mean("value") FROM temperature GROUP BY time({}d)'.format(interval))
+
+        # use these to test
+        # demo_temp = [24,11,25,13,14,23,16,17,18,23]
+        # demo_act = [11,2,12,4,5,10,7,8,9,10]
+        activations = [act['count'] for act in list(activations_result.get_points())]
+        temperature =   [temp['mean'] for temp in list(temperature_result.get_points())]
+
+        base_url = 'http://api.openweathermap.org/data/2.5/'
+        type = ['weather', 'history', 'forecast']
+        country_code = ',DEU'
+        concat_url = base_url + type[2] + "/daily" + '?q=' + location.strip() + country_code + "&cnt=15" '&appid=' + API_KEY
+        conversion_val = 273.15
+
+        r = requests.get(concat_url)
+        data = r.json()
+        reg_params = beta_one(temperature, activations)
+        temp = sum([ temp['temp']['day'] for temp in data['list'] ]) / len(data['list'])
+
+        actual_pump_activations = regress(temp - conversion_val, reg_params)
+        refill_time = max_pump_activations / actual_pump_activations * interval
+
+    except (ConnectionError, ZeroDivisionError)  as e:
+        ## TODO:  better error message
+        print("""Tried to divide by 0. This usually happens when mean(temp)
+            and temp are the same (there is only measurement). Using normal
+            prediction instead of linear regression""")
+
+        with session as sess:
+            last_activation = sess.query(Widget).first().last_activation
+
+        interval = time.time() - last_activation
+
+        refill_time = max_pump_activations * (interval / 360 / 24)
+
+
+
+    print('refill_time: {} days'.format(refill_time))
+
+    return round(refill_time, 2)
+
+
 
 
 @settings.route("/settings", methods= ['GET', 'POST'])
@@ -42,10 +106,16 @@ def settings_page():
             sess.query(Settings).first().consumption = form.consumption.data
             sess.query(Settings).first().reservoir_warn_level = form.reservoir_warn_level.data
             sess.query(Widget).first().activation_level = form.activation_level.data
+            sess.query(Settings).first().api_key = form.api_key.data
+
+            reservoir_size = sess.query(Settings).first().reservoir_size
+            if reservoir_size != form.reservoir_size.data:
+                sess.query(Widget).first().current_water_level = reservoir_size
+
             sess.commit()
             wsys.wsys.set_activation_level(form.activation_level.data)
 
-
+    refill_time = calculate_refill()
 
     with session as sess:
         settings = sess.query(Settings).first()
@@ -53,7 +123,13 @@ def settings_page():
 
 
     # return render_template("settings.html", )
-    return render_template("settings.html", menu_items = menu_items, view_name='Settings', form = form, settings = settings)
+    return render_template(
+        "settings.html",
+        menu_items = menu_items,
+        view_name='Settings',
+        form = form,
+        settings = settings,
+        refill_time = refill_time)
 
 
 @restartView.route("/restart")
@@ -69,93 +145,9 @@ def reset_water_level_func():
     with session as sess:
         reservoir_size = sess.query(Settings).first().reservoir_size
         sess.query(Widget).first().current_water_level = reservoir_size
+        sess.query(Widget).first().widget_state = False
         sess.commit()
-    return render_template("settings.html", menu_items = menu_items, view_name='Settings', form = form, settings = settings)
 
+        wsys.wsys.set_state(False)
 
-@calculate_refill.route("/calculate_refill", methods=['POST'])
-@login_required
-def calculate_refill_func():
-
-    with session as sess:
-        location = sess.query(Settings).first().location
-
-    base_url = 'http://api.openweathermap.org/data/2.5/'
-
-    type = ['weather', 'history', 'forecast']
-
-    country_code = ',DEU'
-
-
-    concat_url = base_url + type[2] + '?q=' + location.strip() + country_code + '&appid=' + API_KEY
-    conversion_val = 273.15
-
-    # print('concat_url: {}'.format(concat_url))
-
-    # TODO: catch network exception, error 404
-    r = requests.get(concat_url)
-
-    # print('response: {}'.format(r.text))
-    # temperature = r.main.temp - convertion_val
-
-    data = r.json()
-
-    # print(f'data_list length: {len(data)}')
-
-
-
-    client = InfluxDBClient(host='localhost', port=8086)
-    client.switch_database('humidity')
-
-    activations_result = client.query('SELECT "count" FROM (select count("value"), time from "activation" GROUP BY time(1w)) WHERE "count" > 0')
-    temperature_result = client.query('SELECT mean("value") FROM temperature GROUP BY time(1w)')
-
-    activations = [act['count'] for act in list(activations_result.get_points())]
-    temperature =   [temp['mean'] for temp in list(temperature_result.get_points())]
-    print(activations)
-
-    # reg_params = beta_one(temperature, activations)
-
-
-    demo_temp = [10,11,12,13,14,15,16,17,18,19]
-    demo_act = [20,21,22,23,24,25,26,27,28,29]
-    reg_params = beta_one(demo_temp, demo_act)
-
-    time.time() * 1000
-
-    print(time.strftime('%MS', t))
-    t = 8.64 * 10**7
-
-    day = []
-
-     for i in range(len(data.list)):
-         day[i] = [ item.main.dt.temp for item in data.list if data.list.dt < data.list.dt + 8.64 * 10**7 ]
-         day.append([])
-
-
-
-    est_activations = regress(30, reg_params)
-
-
-
-
-    # temp = r.json()['main']['temp'] - conversion_val
-
-
-    # TODO: use better structure
-    # client = InfluxDBClient(host='localhost', port=8086)
-    # client.switch_database('humidity')
-    # json_body = [
-    #     {
-    #         "measurement": "temperature",
-    #         "fields": {
-    #             "value": temp
-    #         }
-    #     },
-    #
-    # ]
-    #
-    # was_successfull = client.write_points(json_body)
-
-
-    return str(est_activations)
+    return 'success'

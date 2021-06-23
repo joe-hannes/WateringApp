@@ -2,6 +2,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
+
 from WateringApp.extensions import db, metadata
 
 from WateringApp.config import SQLALCHEMY_DATABASE_URI

@@ -12,9 +12,9 @@ from .extensions import db
 
 from .views import  json, test,  createTables, initialCode, badReq, assertionError
 
-from WateringApp.werkzeuge.WidgetWerkzeug import pump, main, widgetState, autoMode, updateActivationLevelView, getActivationLevelView
+from WateringApp.werkzeuge.WidgetWerkzeug import pump, main, widgetState, autoMode, updateActivationLevelView, getActivationLevelView, json
 
-from WateringApp.werkzeuge.SettingsWerkzeug import settings, restartView, calculate_refill, reset_water_level
+from WateringApp.werkzeuge.SettingsWerkzeug import settings, restartView, reset_water_level
 
 from WateringApp.werkzeuge.StatisticsWerkzeug import statistics
 
@@ -25,40 +25,6 @@ from .Models import User, Widget
 
 
 from flask_fontawesome import FontAwesome
-
-
-# import requests
-
-
-# def start_runner():
-#     def start_loop():
-#         not_started = True
-#         while not_started:
-#             print('In start loop')
-#             try:
-#                 r = requests.get('http://127.0.0.1:5000/')
-#                 print(r)
-#                 if r.status_code == 200:
-#                     print('Server started, quiting start_loop')
-#                     not_started = False
-#                     wsys = WateringSystem()
-#                     wsys.start()
-#
-#                 print(r.status_code)
-#             except:
-#                 print('Server not yet started')
-#             time.sleep(2)
-#
-#     print('Started runner')
-    # thread = threading.Thread(target=start_loop)
-    # thread.start()
-    # start_loop()
-
-# def start_wsys():
-#     conn = sqlite3.connect('sqlite3.db')
-#     cursor = conn.cursor()
-#     cursor.execute=
-#     pass
 
 
 
@@ -87,7 +53,6 @@ def createApp(config_file= 'config.py'):
     app.register_blueprint(restartView)
     app.register_blueprint(updateActivationLevelView)
     app.register_blueprint(getActivationLevelView)
-    app.register_blueprint(calculate_refill)
     app.register_blueprint(reset_water_level)
 
     # app.register_blueprint(assertionError)

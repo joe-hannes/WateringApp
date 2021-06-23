@@ -35,7 +35,7 @@ function toggleWidgetState()
 
 function getWidgetState()
 {
-  console.log("Widget FUnction");
+  console.log("Widget Function");
   $.ajax({url:'/getWidgetState', success: (result) =>
   {
 

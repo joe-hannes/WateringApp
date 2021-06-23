@@ -26,6 +26,7 @@ class Settings(Base):
     consumption = Column(Integer, nullable=True, server_default='N/V')
     reservoir_warn_level = Column(Integer, nullable=True, server_default='-1')
     activation_level = Column(Integer)
+    api_key = Column(String(50), nullable=True)
 
 
     def __init__(self, description):
