@@ -1,9 +1,9 @@
-{% macro appBar(menu_items, view_name) -%}
+{% macro appBar(menu_items, view_name, color) -%}
 
 
-<div class="bg-light border-right" id="sidebar-wrapper">
+<div class="bg-light border-right" id="sidebar-wrapper"  >
   <div class="list-group list-group-flush">
-   <div id='app-bar' class="list-group-item list-group-item-action bg-light ">
+   <div id='app-bar' class="list-group-item list-group-item-action bg-light " style='background:#2A6D87;'>
 
      <span class='fas fa-bars'></span>
      <span id='menu'>{{ view_name }}</span>

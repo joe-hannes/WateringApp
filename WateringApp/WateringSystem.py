@@ -114,13 +114,16 @@ class WateringSystem(object):
     def update_last_activation(self, sess):
         self.__last_activation = time.time()
         print('activation_time: {}'.format(self.__last_activation))
-        # TODO: someting doesnt work here
+
         if sess.query(Widget).first() == None:
+            print('Widget has no entry yet. creating new')
             widget = Widget(last_activation = self.__last_activation)
             sess.add(widget)
             sess.commit()
         else:
-            sess.query(Widget).first().last_activation = self.__last_activation
+            print('updating existing widget entry: {}'.format(math.floor(self.__last_activation)))
+            sess.query(Widget).first().last_activation = math.floor(self.__last_activation)
+            sess.commit()
 
 
 
@@ -186,7 +189,7 @@ class WateringSystem(object):
 
     def log_activation(self):
         client = InfluxDBClient(host='localhost', port=8086)
-        client.switch_database('humidity')
+        client.switch_database('activation')
         json_body = [
             {
                 "measurement": "activation",
@@ -325,13 +328,15 @@ class WateringSystem(object):
             # print("activationLevel: " + str(self.__activationLevel))
             # print("STOP: " + str(STOP))
 
-
+            print(f'logging humidity time:{time.time()}')
             self.log_humidity(humidity, 60)
 
-            with session2 as sess:
-                print('logging temperature')
-                self.log_temperature(sess)
-                print('done logging temperature!')
+            if self.__widget_state:
+
+                with session2 as sess:
+                    print(f'logging temperature: {time.time()}')
+                    self.log_temperature(sess)
+                    print('done logging temperature!')
 
 
 
@@ -345,7 +350,7 @@ class WateringSystem(object):
 
 
 
-            if (self.__activation_level > humidity[0].inPercent()) and \
+            if (self.__activation_level > humidity[2].inPercent()) and \
                 self.__water_level - self.__consumption >= 0 and \
                 self.__widget_state:
 
@@ -371,7 +376,7 @@ class WateringSystem(object):
                 self.__ws_status = 0
                 self.decodeStatus()
                 print('Channel 3: {0}'.format(self.__sensor[0].getHumidity().getValue()))
-                self.__motor.stop()
+                # self.__motor.stop()
 
                 # wait a bit to not constantly check for changes
                 time.sleep(30)

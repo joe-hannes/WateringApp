@@ -1,14 +1,19 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, SubmitField
-from wtforms.fields.html5 import IntegerRangeField
-from wtforms.validators import DataRequired
+from wtforms.fields.html5 import IntegerRangeField, IntegerField, TelField
+from wtforms.validators import DataRequired, InputRequired, NumberRange, Regexp
+
+NUMBER_ERROR = 'Please enter a valid number.'
+STRING_ERROR = 'Please enter a valid string of characters.'
+
 
 class SettingsForm(FlaskForm):
-    location = StringField('Location', validators=[DataRequired()])
-    consumption = IntegerField('Consumption', validators=[DataRequired()])
-    reservoir_size = IntegerField('Reservoir Size', validators=[DataRequired()])
-    reservoir_warn_level = IntegerField('Notify when water level is below', validators=[DataRequired()])
+    location = StringField('Location', validators=[Regexp('^([A-Z]*[a-z]*)+$', 0, STRING_ERROR)])
+    consumption = TelField('Consumption', validators=[Regexp('^[0-9]*$', 0, message=NUMBER_ERROR)])
+    reservoir_size = TelField('Reservoir Size', validators=[Regexp('^[0-9]*$', 0, message=NUMBER_ERROR)])
+    reservoir_warn_level = TelField('Notify when water level is below',
+        validators=[Regexp('^[0-9]*$',0 , message=NUMBER_ERROR)])
     activation_level = IntegerRangeField('Activate pump below')
+
+    api_key = StringField('API Key', validators=[InputRequired(STRING_ERROR)])
     submit = SubmitField('Save Settings')
-    calculate_refill = SubmitField('Calculate Refill')
-    api_key = StringField('API Key')

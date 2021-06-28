@@ -13,7 +13,7 @@
 
  {% block body %}
 
- {{ macros.appBar(menu_items, view_name) }}
+ {{ macros.appBar(menu_items, view_name, '#2A6D87') }}
 
 
  <!-- messages for button presses -->
@@ -38,12 +38,24 @@
 <div>
 {{ form.reservoir_size.label }}<br>
 {{ form.reservoir_size(value=settings['reservoir_size']) }} ml<br>
+{% for error in form.reservoir_size.errors %}
+<p style="color: red;"> {{ error }} </p>
+{% endfor %}
 <a id='reset-water-level' >Reset Water Level</a>
+
 </div>
 {{ form.consumption.label }}<br>
 {{ form.consumption(value=settings['consumption']) }} ml<br>
+{% for error in form.consumption.errors %}
+<p style="color: red;"> {{ error }} </p>
+{% endfor %}
+
 {{ form.reservoir_warn_level.label }} <br>
 {{ form.reservoir_warn_level(value=settings['reservoir_warn_level']) }} %<br>
+{% for error in form.reservoir_warn_level.errors %}
+<p style="color: red;"> {{ error }} </p>
+{% endfor %}
+{{ form.reservoir_warn_level.error }}
 
 {{ form.activation_level.label }}  {{ activation_level }} %<br>
 {{ form.activation_level(value=settings['activation_level']) }}<br>
@@ -57,9 +69,13 @@
 {{ form.location.label }}<br>
 {{ form.location(value=settings['location']) }}<br>
 
+{% for error in form.location.errors %}
+<p class='validation-error' style='color:red;'> {{ error }} </p>
+{% endfor %}
+
 {{ form.api_key.label }}<br>
 {{ form.api_key(value=settings['api_key']) }}
-</p>
+
 
 {{ form.submit }}
 

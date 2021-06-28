@@ -1,6 +1,7 @@
+import time
 
 import RPi.GPIO as GPIO
-import time
+
 
 class Motor(object):
     def __init__(self):
@@ -23,11 +24,8 @@ class Motor(object):
         delay =  0.0005
         start = time.time()
 
-        while time.time() - start <= 2.0:
-        # while True:
-            print("Motor started")
+        while time.time() - start <= 30.0:
             for i in range(steps):
-                # print("step: " + str(i))
                 GPIO.output(self.__stepPin, GPIO.LOW)
                 time.sleep(delay)
                 GPIO.output(self.__stepPin, GPIO.HIGH)

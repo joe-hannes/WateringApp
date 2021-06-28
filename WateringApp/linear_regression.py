@@ -1,24 +1,24 @@
-import statistics
+from statistics import  mean
 
-def beta_one(temp, activations):
+def calc_params(temp, activations):
     """based on past temperatures and activations over an interval, calculate parameters to estimate interval
 
     param :temp: a list of temperature values over interval
     param :activations: a list of activations over an interval
 
-    for i in range(len(x)-1):
-  x_sub = x[i] - x_mean
-  x_sub_sq = x_sub**2
-  enum += x_sub * (medv[i] - medv_mean)
-  denom += x_sub_sq
+    return: the parameters for linear regression ,
+            -1 if no data exists to calculate the parameters
+
     """
 
     # TODO: check length of lists
 
     enum = 0
     denom = 0
-    temp_mean = statistics.mean(temp)
-    activation_mean = statistics.mean(activations)
+
+    temp_mean = mean(temp)
+    activation_mean = mean(activations)
+
     for i in range(len(temp)):
         temp_sub = temp[i] - temp_mean
         temp_sub_sq = temp_sub**2
