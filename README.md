@@ -22,19 +22,19 @@ This Repository contains the files for a watering system using a stepper motor t
   |  
   |__templates  
   
-  Fachwerte  
+  **Fachwerte**  
   - basic values that are not mutable (e.g. date, water_level)  
   
-  Materialien  
+  **Materialien**  
   - modules that use Fachwerte  
   
-  Werkzeuge  
+  **Werkzeuge**  
   - use Materialien and Fachwerte and display the results in a GUI  
 
-  static
+  **static**
   - contains css and js files  
 
-  templates
+  **templates**
   - contains html files
 
 
