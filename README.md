@@ -9,7 +9,7 @@ This Repository contains the files for a watering system using a stepper motor t
 ✍️ Code Structure
 =========
   
-  This Project uses the WAM soft architecture approach. The following structure should be used:
+  This Project uses the WAM software architecture approach. The following structure should be used:
   
   |  
   |__Fachwerte  
