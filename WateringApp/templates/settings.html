@@ -1,0 +1,222 @@
+<meta content="width=device-width, initial-scale=1" name="viewport" />
+
+{% extends 'flask_user/_public_base.html' %}
+
+{% block extra_css %}
+     {{ fontawesome_html() }}
+     <link href="{{url_for('static', filename='settings__style.css')}}" rel="stylesheet" type="text/css">
+     <!-- <link href="{{url_for('static', filename='user__style.css')}}" rel="stylesheet" type="text/css"> -->
+{% endblock %}
+
+
+ {% block content %}
+
+<div class="content">
+
+
+ <!-- messages for button presses -->
+ <div id ='settings-submit' class="alert-box success">
+   <!-- <div class="alert" role="alert"> -->
+       Settings Saved
+       <span aria-hidden="true">&times;</span>
+     <!-- </div> -->
+ </div>
+
+
+ <div class= "tabs">
+   <button id="general-tab" class="tab" onclick="openSetting('general')">General</button>
+   <button id="widget-tab" class="tab" onclick="openSetting('widget')">Widget</button>
+   <button id="prediction-tab" class="tab" onclick="openSetting('prediction')">Prediction</button>
+ </div>
+
+<form action="/settings" method="post" novalidate>
+{{ form.hidden_tag() }}
+
+
+<!-- GENERAL SETTINGS -->
+
+<div id="general" class="setting">
+
+  <br>
+
+  <input id='rb-external-db' type="radio" name="external_db" value="False">Use external source for InfluxDB? (Recommended)</input>
+
+    <br>
+      <br>
+
+
+
+  <div id='div-external-db' class="wrapper">
+
+  <div class="label-div">
+
+      {{ form.db_uri.label(class_="roboto-font") }} <br>
+
+      {% for error in form.db_uri.errors %}
+        <p style="color: red;"> {{ error }} </p> <br>
+      {% endfor %}
+
+            <br>
+
+  </div>
+
+
+    <div class="input-div">
+
+
+      {{ form.db_uri(placeholder=settings['db_uri'])  }} <br>
+
+      {% for error in form.db_uri.errors %}
+      <p style="color: red;"> {{ error }} </p>
+      {% endfor %}
+      <br>
+
+
+    </div>
+
+    <br>
+    <br>
+
+        </div>
+
+    {{ form.submit(id='btn-save-settings') }}
+
+
+
+  </div>
+
+
+
+
+<!-- WIDGET SETTINGS -->
+
+<div id="widget" class="setting" style="display:none">
+
+
+  <br>
+
+  <div class="wrapper">
+  <div class="label-div">
+  {{ form.reservoir_size.label(class_="roboto-font") }}<br>
+  {% for error in form.reservoir_size.errors %}
+  <p style="color: red;"> {{ error }} </p> <br>
+  {% endfor %}
+
+  <br>
+
+  {{ form.consumption.label(class_="roboto-font") }}<br>
+  {% for error in form.consumption.errors %}
+  <p style="color: red;"> {{ error }} </p>
+  {% endfor %}
+
+  <br>
+
+  {{ form.reservoir_warn_level.label(class_="roboto-font") }}<br>
+  {% for error in form.reservoir_warn_level.errors %}
+  <p style="color: red;"> {{ error }} </p> <br>
+  {% endfor %}
+
+
+  </div>
+
+
+  <div class="input-div">
+  {{ form.reservoir_size(placeholder="{} ml".format(settings['reservoir_size']))  }}
+
+  {% for error in form.reservoir_size.errors %}
+  <p style="color: red;"> {{ error }} </p>
+  {% endfor %}
+
+  <br>
+
+  <br>
+
+  {{ form.consumption(placeholder="{} ml".format(settings['consumption'])) }} <br>
+
+  {% for error in form.consumption.errors %}
+  <p style="color: red;"> {{ error }} </p>
+  {% endfor %}
+
+  <br>
+
+  {{ form.reservoir_warn_level(placeholder="{} %".format(settings['reservoir_warn_level']))  }} <br>
+
+  {% for error in form.reservoir_warn_level.errors %}
+  <p style="color: red;"> {{ error }} </p>
+  {% endfor %}
+  </div>
+
+  </div>
+
+  <br>
+
+
+  {{ form.activation_level.label(class_="roboto-font") }}   <span id="range-value"> {{ activation_level }} </span> % <br>
+
+  {{ form.activation_level(class_= 'slider', id='activation-level', value=settings['activation_level']) }}
+
+  <br>
+  <br>
+
+  {{ form.submit(id='btn-save-settings') }}
+
+
+  <!-- PREDICTION SETTINGS -->
+
+</div>
+
+<div id="prediction" class="setting" style="display:none">
+
+  <br>
+
+  <div class="wrapper">
+
+    <div class="label-div">
+      {{ form.location.label(class_="roboto-font") }}<br>
+      {% for error in form.location.errors %}
+      <p class='validation-error' style='color:red;'> {{ error }} </p>
+      {% endfor %}
+      <br>
+
+          {{ form.api_key.label(class_="roboto-font") }} <br>
+    </div>
+
+
+    <div class="input-div">
+      {{ form.location(placeholder=settings['location'])  }} <br>
+
+      {% for error in form.location.errors %}
+      <p style="color: red;"> {{ error }} </p>
+      {% endfor %}
+
+      <br>
+
+      {{ form.api_key(placeholder=settings['api_key']) }} <br>
+    </div>
+
+
+  </div>
+
+  <br>
+  <br>
+
+  {{ form.submit(id='btn-save-settings') }}
+
+</div>
+
+
+<br>
+</form>
+
+</div>
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-sidebar/3.3.2/jquery.sidebar.min.js"></script>
+
+<script type=text/javascript src="{{url_for('static', filename='settings__script.js') }}"></script>
+
+
+
+{% endblock %}

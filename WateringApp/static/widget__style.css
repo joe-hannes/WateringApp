@@ -1,0 +1,167 @@
+body
+{
+  margin: 0px;
+  /* background-color: #191717; */
+  background-color: red;
+  /* text-align: center; */
+}
+
+.alert-box {
+	padding: 15px;
+  width:100%;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    z-index: 1;
+    position: relative;
+}
+
+.success {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+    display: none;
+    position: absolute;
+}
+
+.ocean
+{
+  /* height: 33vh; */
+  height: 60vh;
+  width: 100%;
+  position: absolute;
+  bottom: 3px;
+  left: 0;
+  background: #2a6d87;
+}
+
+.wave
+{
+  background: url(wave.svg) repeat-x;
+  position: absolute;
+  top: -50px;
+  padding-bottom: 1px;
+  width: 6400px;
+  height: 50px;
+  /* margin: 0px;
+  padding: 0px; */
+  /* border: solid red 1px; */
+
+
+  animation: wave 7s cubic-bezier( 0.36, 0.45, 0.63, 0.53) infinite;
+  transform: translate3d(0, 0, 0);
+}
+
+#ocean-container
+{
+  position: absolute;
+  text-align: center;
+  width: 100%;
+  min-width: 540px;
+  height: 80vh ;
+  /* border: red solid 2px; */
+  /* top: 0px; */
+  top: 10vh;
+  overflow:hidden;
+
+  z-index: -1;
+}
+
+#svg
+{
+
+/* border: solid 1px red; */
+
+}
+
+
+@keyframes wave {
+0% {
+  margin-left: 0;
+}
+100% {
+  margin-left: -1600px;
+}
+}
+
+@keyframes swell {
+0%, 100% {
+  transform: translate3d(0,-25px,0);
+}
+50% {
+  transform: translate3d(0,5px,0);
+}
+}
+
+/* #play-btn
+{
+  visibility: hidden;
+}
+
+#pause-text
+{
+  visibility: hidden;
+}
+
+#status-area
+
+{
+  stroke: #79ab64;
+  fill: #79ab64;
+  /* visibility: hidden; */
+}
+
+/* #pausetoplay
+{
+  visibility: hidden;
+} */
+
+#active-text
+{
+  visibility: hidden;
+}
+
+#error-text
+{
+  visibility: hidden;
+}
+
+
+
+#active-icon
+{
+  visibility: hidden;
+}
+
+#error-icon
+{
+  visibility: hidden;
+}
+
+#value-text
+{
+  color: #3c8dff;
+  position: absolute;
+  top: 80%;
+  left: 55%;
+} */
+
+
+#progress-bar {
+  fill: none;
+  stroke-miterlimit: round;
+  will-change: auto;
+  stroke-width: 25px;
+  transition: stroke-dashoffset 850ms ease-in-out;
+}
+
+.anim-container
+{
+  padding-top: 10vh;
+  /* padding-bottom: 10vh; */
+  height: 80vh;
+  /* border: solid green 3px; */
+
+  /* min-height: 540px; */
+  /* min-width: 90vh; */
+}

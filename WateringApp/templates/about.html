@@ -1,0 +1,25 @@
+<meta content="width=device-width, initial-scale=1" name="viewport" />
+
+{% extends 'flask_user/_public_base.html' %}
+
+{% block extra_css %}
+
+<link href="{{url_for('static', filename='about__style.css')}}" rel="stylesheet" type="text/css">
+
+<style media="screen">
+  p
+  {
+    color: white;
+  }
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+
+<!-- TODO:  everything -->
+<p>Github:</p>
+<a href="https://github.com/joe-hannes/WateringApp">https://github.com/joe-hannes/WateringApp</a>
+
+{% endblock %}

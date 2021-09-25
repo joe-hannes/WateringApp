@@ -1,0 +1,19 @@
+{% extends 'flask_user/_public_base.html' %}
+
+{% block extra_css %}
+     <link href="{{url_for('static', filename='statistics__style.css')}}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block content %}
+
+<!-- TODO: make link dynamic -->
+
+   <iframe
+     src="http://192.168.178.41:3000/d/ASS9f7Rgz/watering-system-dashboard?orgId=1&kiosk"
+     width="100%"
+     style="min-height: 100vh;"
+     frameborder="0">
+  </iframe>
+
+
+  {% endblock %}

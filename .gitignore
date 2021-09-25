@@ -1,0 +1,12 @@
+**/__pycache__
+**/nohup.out
+**/WateringApp.egg-info
+**/index2.html
+**/simple_test.py
+**/sqlite3.db
+__pycache__/
+tests/
+**.db
+config.py
+**.log
+setup.py
