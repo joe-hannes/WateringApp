@@ -78,7 +78,7 @@ navigate to <ip-address>/create
  🔌 wiring
  ======
   
- ![wiring](wiring.png)
+ ![wiring](wiring2.png)
   
   
   ❔
